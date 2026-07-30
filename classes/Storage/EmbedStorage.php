@@ -14,6 +14,14 @@ namespace Grav\Plugin\SocialLinking\Storage;
  * Zahl+Punkt-Konvention (würde von Grav als eigene Unterseite interpretiert).
  * Er wird von Page::media() nicht mit eingelesen, da es sich um eine
  * Unterebene handelt.
+ *
+ * WICHTIG zur URL-Bildung: Medien werden bewusst NICHT über die "saubere"
+ * Seiten-Route (Page::url()) referenziert, sondern über den tatsächlichen
+ * physischen Pfad relativ zum Grav-Wurzelverzeichnis (z. B.
+ * "/user/pages/03.blog/05.mein-beitrag/..."). Grav löst Bild-URLs für
+ * beliebig tief verschachtelte Unterordner nicht über sein Routing auf -
+ * nur der reale Pfad wird von Apache/Nginx per Standard-Regel ("Datei
+ * existiert? -> direkt ausliefern") ohne Umweg über index.php bedient.
  */
 class EmbedStorage
 {
@@ -21,14 +29,16 @@ class EmbedStorage
     private string $webBase;
 
     /**
-     * @param string $pageFolder Absoluter Dateisystempfad zum Seitenordner (Page::path())
-     * @param string $pageUrl    Absolute, aufrufbare URL der Seite (Page::url()), z. B. "/blog/mein-beitrag"
-     * @param string $subfolder  Name des Unterordners für die Zwischenspeicherung
+     * @param string $pageFolder    Absoluter Dateisystempfad zum Seitenordner (Page::path())
+     * @param string $webBasePath   Web-erreichbarer Pfad, der physisch exakt auf $pageFolder zeigt
+     *                              (siehe EmbedRenderer::resolveStaticWebBase()), z. B.
+     *                              "/user/pages/03.blog/05.mein-beitrag"
+     * @param string $subfolder     Name des Unterordners für die Zwischenspeicherung
      */
-    public function __construct(string $pageFolder, string $pageUrl, string $subfolder = '_social-linking')
+    public function __construct(string $pageFolder, string $webBasePath, string $subfolder = '_social-linking')
     {
         $this->baseDir = rtrim($pageFolder, '/') . '/' . trim($subfolder, '/');
-        $this->webBase = rtrim($pageUrl, '/') . '/' . trim($subfolder, '/');
+        $this->webBase = rtrim($webBasePath, '/') . '/' . trim($subfolder, '/');
     }
 
     public function exists(string $key): bool

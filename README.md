@@ -114,9 +114,17 @@ u. a.:
 
 Bilder (Avatar, Anhänge, Link-Vorschaubild) werden beim ersten Laden einmalig
 heruntergeladen und im selben Ordner abgelegt; im JSON stehen dann bereits
-die lokalen, absoluten Pfade. Schlägt ein einzelner Bild-Download fehl, wird
-als Fallback die ursprüngliche Remote-URL verwendet, damit die Anzeige nicht
+die lokalen Pfade. Schlägt ein einzelner Bild-Download fehl, wird als
+Fallback die ursprüngliche Remote-URL verwendet, damit die Anzeige nicht
 komplett scheitert.
+
+**Technischer Hinweis:** Die lokalen Bild-URLs zeigen bewusst auf den
+*physischen* Pfad relativ zum Grav-Wurzelverzeichnis (z. B.
+`/user/pages/03.blog/05.mein-beitrag/_social-linking/.../datei.jpg`) statt
+auf die "saubere" Seiten-Route. Grund: Grav löst URLs für beliebig tief
+verschachtelte Unterordner nicht generisch über sein Seiten-Routing auf -
+nur der reale physische Pfad wird vom Webserver per Standardregel direkt
+statisch ausgeliefert, ohne Umweg über `index.php`.
 
 **Hinweis zur Sichtbarkeit:** Die abgelegten Dateien liegen im normal
 erreichbaren Seitenordner und sind über die URL grundsätzlich abrufbar -

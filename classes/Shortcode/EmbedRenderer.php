@@ -67,7 +67,7 @@ class EmbedRenderer
 
         $storage = new EmbedStorage(
             $page->path(),
-            $page->url(),
+            $this->resolveStaticWebBase($page->path()),
             (string) ($this->config['storage_subfolder'] ?? '_social-linking')
         );
         $key = EmbedStorage::keyFor($service, $type, $url . ($type === 'timeline' ? '|limit=' . $limit : ''));
@@ -99,6 +99,32 @@ class EmbedRenderer
         }
 
         return $this->renderTemplate($type, $data);
+    }
+
+    /**
+     * Bildet aus dem physischen Seitenordner-Pfad einen web-erreichbaren Pfad,
+     * der 1:1 auf dieselbe Datei zeigt - unabhängig von der "sauberen"
+     * Seiten-Route. Dadurch werden lokal gecachte Medien direkt statisch vom
+     * Webserver ausgeliefert (Standard-Regel "Datei existiert? -> ausliefern,
+     * sonst an index.php weiterreichen"), statt über Grav's Seiten-Routing zu
+     * laufen - das löst beliebig tief verschachtelte Unterordner nämlich
+     * nicht zuverlässig auf und führt sonst zu einem 404 über den
+     * PagesProcessor.
+     */
+    private function resolveStaticWebBase(string $pageFolder): string
+    {
+        $grav = Grav::instance();
+
+        $root = defined('GRAV_ROOT') ? rtrim(GRAV_ROOT, '/') : '';
+        $abs = rtrim($pageFolder, '/');
+
+        $relative = ($root !== '' && str_starts_with($abs, $root))
+            ? ltrim(substr($abs, strlen($root)), '/')
+            : ltrim($abs, '/');
+
+        $rootUrl = rtrim((string) $grav['uri']->rootUrl(false), '/');
+
+        return $rootUrl . '/' . $relative;
     }
 
     private function renderTemplate(string $type, array $data): string
