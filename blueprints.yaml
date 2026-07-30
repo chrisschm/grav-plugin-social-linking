@@ -1,0 +1,21 @@
+name: Social Linking
+slug: social-linking
+type: plugin
+version: 0.1.0
+description: Bindet Beiträge (und später Profile/Timelines) von Mastodon und kompatiblen Diensten als lokal zwischengespeicherte, themefähige Links/Embeds ein.
+icon: retweet
+dependencies:
+  - { name: grav, version: '>=1.7.0' }
+  - { name: shortcode-core, version: '>=5.0.0' }
+author:
+    name: Christian Schmidt
+    email: chschmidt@noreply.codeberg.org
+    url: https://www.jcs-net.de
+keywords: grav, plugin, mastodon, activitypub, fediverse, social, embed, shortcode
+homepage: https://codeberg.org/chschmidt/grav-plugin-social-linking
+bugs: https://codeberg.org/chschmidt/grav-plugin-social-linking/issues
+docs: https://codeberg.org/chschmidt/grav-plugin-social-linking/wiki
+license: MIT
+compatibility:
+  grav:
+    - '2.0'
