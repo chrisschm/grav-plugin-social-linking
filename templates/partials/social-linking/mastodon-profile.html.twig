@@ -1,0 +1,11 @@
+{% set a = embed.account is defined and embed.account is not empty ? embed.account : embed %}
+<div class="se se-mastodon se-profile">
+    <div class="se-profile-header"{% if a.header %} style="background-image:url('{{ a.header }}');"{% endif %}></div>
+    <div class="se-profile-body">
+        {% if a.avatar %}
+            <img class="se-avatar se-avatar-lg" src="{{ a.avatar }}" alt="" loading="lazy">
+        {% endif %}
+        <a class="se-display-name" href="{{ a.url }}" target="_blank" rel="noopener noreferrer nofollow">{{ a.display_name }}</a>
+        <span class="se-handle">@{{ a.acct }}</span>
+    </div>
+</div>

@@ -1,0 +1,6 @@
+<div class="se se-mastodon se-timeline">
+    {% include 'partials/social-linking/mastodon-profile.html.twig' with {embed: {account: embed.account}} only %}
+    {% for status in embed.statuses %}
+        {% include 'partials/social-linking/mastodon-status.html.twig' with {embed: status} only %}
+    {% endfor %}
+</div>
