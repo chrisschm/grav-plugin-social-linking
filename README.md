@@ -15,6 +15,16 @@ jedem Seitenaufruf live von der API.
 3. Plugin aktivieren: `bin/gpm install social-linking` (falls per GPM) oder
    direkt im Admin-Panel unter *Plugins*.
 
+> **Wichtig:** Neben `blueprints.yaml` (Formular-/Metadaten-Struktur) muss im
+> Plugin-Root zusätzlich eine `social-linking.yaml` mit den Default-Werten
+> liegen (siehe Vorlage weiter unten). Ohne diese Datei taucht das Plugin in
+> der Admin-Oberfläche **nicht** in der Plugin-Liste auf - reproduzierbar
+> bestätigt sowohl unter Grav 1.7 (klassisches Admin) als auch unter Grav 2.0
+> (Admin-Next). Das widerspricht der offiziellen Doku, die nur `blueprints.yaml`
+> als notwendig beschreibt - vermutlich ein bislang nicht dokumentiertes
+> Verhalten oder ein eigener Bug in den getesteten Versionen. Falls sich das
+> in einer späteren Grav-Version ändert, bitte hier vermerken.
+
 ## Aufrufkonvention
 
 Der zentrale Baustein ist der Shortcode `[social-embed ...]`, nutzbar in
@@ -193,6 +203,11 @@ tokens:                             # optional, für nicht-öffentliche Inhalte
 
 ## Voraussetzungen
 
-- Grav ≥ 1.7
+- Grav 1.7 oder 2.0
+- **PHP ≥ 8.3** – der Code nutzt durchgehend PHP-8-Syntax (Constructor Property
+  Promotion, `match`-Ausdrücke, `str_starts_with()`). Grav 1.7 selbst käme
+  offiziell mit PHP ≥ 7.3.6 (empfohlen 7.4) aus, das Plugin benötigt jedoch
+  in jedem Fall PHP 8.3 oder neuer, unabhängig von der Grav-Version.
+  Getestet mit PHP 8.3 (Grav 1.7) und PHP 8.5 (Grav 2.0).
 - Plugin **Shortcode Core** (`shortcode-core`)
 - PHP mit `curl`-Extension (empfohlen) oder aktivierten `allow_url_fopen`-Streams als Fallback

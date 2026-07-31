@@ -136,21 +136,26 @@
   margin-bottom: 0;
 }
 
-.se-content a {
+.se-content a,
+.se-profile-note a {
   color: var(--se-accent);
 }
 
 .se-content .hashtag,
-.se-content .mention {
+.se-content .mention,
+.se-profile-note .hashtag,
+.se-profile-note .mention {
   color: var(--se-accent);
   font-weight: 500;
 }
 
-.se-content .invisible {
+.se-content .invisible,
+.se-profile-note .invisible {
   display: none;
 }
 
-.se-content .ellipsis::after {
+.se-content .ellipsis::after,
+.se-profile-note .ellipsis::after {
   content: "…";
 }
 
@@ -283,6 +288,95 @@
   border: 3px solid var(--se-bg);
   margin-top: -40px;
   object-fit: cover;
+}
+
+.se-profile-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.se-profile-identity .se-display-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 1.1rem;
+}
+
+.se-profile-note {
+  margin: 0.4rem 0;
+  line-height: 1.5;
+  color: var(--se-text);
+}
+
+.se-profile-note p {
+  margin: 0 0 0.5rem;
+}
+
+.se-profile-note p:last-child {
+  margin-bottom: 0;
+}
+
+.se-profile-stats {
+  display: flex;
+  gap: 1.4rem;
+  margin: 0.6rem 0 0.2rem;
+}
+
+.se-stat-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.se-stat-block strong {
+  font-size: 1rem;
+  line-height: 1.1;
+}
+
+.se-stat-block span {
+  font-size: 0.78rem;
+  color: var(--se-muted);
+}
+
+.se-profile-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+  margin-top: 0.6rem;
+}
+
+.se-field {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--se-border);
+  border-radius: calc(var(--se-radius) - 6px);
+  font-size: 0.85rem;
+}
+
+.se-field-name {
+  color: var(--se-muted);
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+.se-field-value {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.se-field-verified {
+  border-color: color-mix(in srgb, #22c55e 50%, var(--se-border));
+}
+
+.se-field-check {
+  color: #22c55e;
+  flex-shrink: 0;
 }
 
 /* Timeline (Ausbaustufe) */

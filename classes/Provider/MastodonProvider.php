@@ -60,7 +60,7 @@ class MastodonProvider implements ProviderInterface
         [$instance, $acct] = $this->parseAccountReference($handleOrUrl);
         $raw = $this->lookupAccount($instance, $acct);
 
-        return array_merge($this->normalizeAccount($raw), [
+        return array_merge($this->normalizeAccount($raw, $instance), [
             'type'       => 'profile',
             'service'    => $this->getKey(),
             'instance'   => $instance,
@@ -92,7 +92,7 @@ class MastodonProvider implements ProviderInterface
             'service'    => $this->getKey(),
             'instance'   => $instance,
             'source_url' => $handleOrUrl,
-            'account'    => $this->normalizeAccount($accountRaw),
+            'account'    => $this->normalizeAccount($accountRaw, $instance),
             'statuses'   => $statuses,
         ];
     }
@@ -171,7 +171,7 @@ class MastodonProvider implements ProviderInterface
             'sensitive'    => (bool) ($raw['sensitive'] ?? false),
             'visibility'   => $raw['visibility'] ?? 'public',
             'language'     => $raw['language'] ?? null,
-            'account'      => $this->normalizeAccount($raw['account'] ?? []),
+            'account'      => $this->normalizeAccount($raw['account'] ?? [], $instance),
             'media_attachments' => array_map(
                 static fn (array $m): array => [
                     'type'        => $m['type'] ?? 'unknown',
@@ -197,20 +197,49 @@ class MastodonProvider implements ProviderInterface
         return $status;
     }
 
-    private function normalizeAccount(array $raw): array
+    /**
+     * Normalisiert ein Mastodon-Account-Objekt.
+     *
+     * Wichtig: Die Mastodon-API liefert "acct" für Konten der abgefragten
+     * Instanz selbst OHNE Domain-Suffix (z. B. "christiansagt" statt
+     * "christiansagt@norden.social") - nur bei föderierten/entfernten Konten
+     * ist die Domain bereits enthalten. Für eine konsistente Anzeige wird
+     * die Instanz-Domain hier bei Bedarf ergänzt.
+     */
+    private function normalizeAccount(array $raw, string $instance): array
     {
         if (empty($raw)) {
             return [];
         }
 
+        $acct = $raw['acct'] ?? ($raw['username'] ?? '');
+        if ($acct !== '' && !str_contains($acct, '@')) {
+            $acct .= '@' . $instance;
+        }
+
         return [
-            'id'           => $raw['id'] ?? null,
-            'username'     => $raw['username'] ?? '',
-            'acct'         => $raw['acct'] ?? ($raw['username'] ?? ''),
-            'display_name' => $raw['display_name'] ?: ($raw['username'] ?? ''),
-            'url'          => $raw['url'] ?? '',
-            'avatar'       => $raw['avatar'] ?? null,
-            'header'       => $raw['header'] ?? null,
+            'id'               => $raw['id'] ?? null,
+            'username'         => $raw['username'] ?? '',
+            'acct'             => $acct,
+            'display_name'     => $raw['display_name'] ?: ($raw['username'] ?? ''),
+            'url'              => $raw['url'] ?? '',
+            'avatar'           => $raw['avatar'] ?? null,
+            'header'           => $raw['header'] ?? null,
+            'locked'           => (bool) ($raw['locked'] ?? false),
+            'bot'              => (bool) ($raw['bot'] ?? false),
+            'created_at'       => $raw['created_at'] ?? null,
+            'note_html'        => $raw['note'] ?? '',
+            'followers_count'  => $raw['followers_count'] ?? 0,
+            'following_count'  => $raw['following_count'] ?? 0,
+            'statuses_count'   => $raw['statuses_count'] ?? 0,
+            'fields'           => array_map(
+                static fn (array $f): array => [
+                    'name'       => $f['name'] ?? '',
+                    'value_html' => $f['value'] ?? '',
+                    'verified'   => !empty($f['verified_at']),
+                ],
+                $raw['fields'] ?? []
+            ),
         ];
     }
 
