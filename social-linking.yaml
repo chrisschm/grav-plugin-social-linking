@@ -1,0 +1,15 @@
+enabled: false
+
+# Name des Unterordners, der innerhalb jedes Seitenordners für Rohdaten
+# und lokale Medienkopien angelegt wird.
+storage_subfolder: '_social-linking'
+
+# Wie lange (in Sekunden) auf eine Antwort der Dienst-API gewartet wird,
+# bevor der Aufruf abgebrochen und stattdessen ein evtl. vorhandener
+# Cache-Stand angezeigt wird.
+timeout: 10
+
+# Optionale Access-Token je Instanz, für nicht-öffentliche Inhalte oder
+# höhere Rate-Limits. Leer lassen, wenn nicht benötigt.
+# tokens:
+#   norden.social: 'dein-access-token'
