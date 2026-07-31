@@ -1,5 +1,5 @@
-# v0.3.0 (unreleased)
-## TBD
+# v0.3.0
+## 07/31/2026
 
 1. [](#new)
     * profile type: follower/following/status counts, bio, joined date, custom profile fields (with verified badge) added
