@@ -218,13 +218,6 @@ lassen sich die Werte gezielt im eigenen Theme-CSS überschreiben, z. B.:
 
 ## Bekannte Einschränkungen / ToDo
 
-- **Keine Internationalisierung:** Alle im Plugin sichtbaren Texte (Twig-
-  Templates wie „Follower“, „Dabei seit“, „Dieser Server“, „Auf {instanz}
-  ansehen“, „Medien anzeigen“, sowie PHP-seitige Fehlermeldungen) sind aktuell
-  hart als Deutsch verdrahtet - es gibt noch keine `languages/de.yaml` /
-  `languages/en.yaml` mit Grav-typischen Übersetzungs-Keys. Für den
-  produktiven Einsatz auf mehrsprachigen oder englischsprachigen Grav-Sites
-  wäre das nachzuziehen.
 - **Keine Pagination:** Bei `type="timeline"` (instanzweiter Live-Feed) wird
   immer nur der neueste Ausschnitt (`limit`, Default 10) geladen, ein
   "weitere laden"-Mechanismus fehlt noch.
@@ -247,6 +240,24 @@ Funktionsumfang hinaus trägt:
   `social-linking.php`/`shortcodes/SocialLinkShortcode.php` registriert
   wird. Speicherung, Medien-Zwischenspeicherung und der Shortcode-Parameter
   `service="..."` funktionieren dann automatisch mit.
+
+## Internationalisierung
+
+Alle Texte in den Twig-Templates (Beschriftungen wie „Follower“, „Dabei
+seit“, „Dieser Server“, Button-/Titel-Texte wie „Medien anzeigen“) sowie die
+Fehlermeldungen aus `EmbedRenderer` laufen über Gravs Standard-Sprachdateien
+(`languages/de.yaml`, `languages/en.yaml`, Präfix `PLUGIN_SOCIAL_LINKING.*`).
+Weitere Sprachen lassen sich durch eine zusätzliche `languages/<code>.yaml`
+mit denselben Keys ergänzen (Grav übernimmt automatisch Deutsch als Fallback,
+solange `translations_fallback` nicht deaktiviert ist).
+
+**Bewusst nicht übersetzt:** die internen Ausnahme-Meldungen innerhalb von
+`MastodonProvider` (z. B. bei einer nicht auswertbaren URL). Diese Klasse ist
+absichtlich unabhängig von einer laufenden Grav-Instanz gehalten, damit sie
+sich per PHPUnit/eigenem Test-Harness auch ganz ohne Grav-Bootstrap testen
+lässt; eine Kopplung an `$grav['language']` hätte das verhindert. Diese
+Meldungen tauchen ohnehin nur bei fehlerhaften Aufrufen auf (z. B. eine URL,
+die keinem der unterstützten Muster entspricht), nicht im normalen Betrieb.
 
 ## Konfiguration
 

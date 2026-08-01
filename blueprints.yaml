@@ -1,7 +1,7 @@
 name: Social Linking
 slug: social-linking
 type: plugin
-version: 0.4.0
+version: 0.3.0
 description: Bindet Beiträge (und später Profile/Timelines) von Mastodon und kompatiblen Diensten als lokal zwischengespeicherte, themefähige Links/Embeds ein.
 icon: retweet
 dependencies:
@@ -36,14 +36,14 @@ form:
 
     storage_subfolder:
       type: text
-      label: Speicherordner
-      help: Name des Unterordners, der innerhalb jedes Seitenordners für Rohdaten und lokale Medienkopien angelegt wird.
+      label: PLUGIN_SOCIAL_LINKING.STORAGE_SUBFOLDER
+      help: PLUGIN_SOCIAL_LINKING.STORAGE_SUBFOLDER_HELP
       default: _social-linking
 
     timeout:
       type: text
-      label: API-Timeout (Sekunden)
-      help: Wie lange auf eine Antwort der Dienst-API gewartet wird, bevor der Aufruf abgebrochen und stattdessen ein evtl. vorhandener Cache-Stand angezeigt wird.
+      label: PLUGIN_SOCIAL_LINKING.TIMEOUT
+      help: PLUGIN_SOCIAL_LINKING.TIMEOUT_HELP
       default: 10
       validate:
         type: int
@@ -51,12 +51,4 @@ form:
     tokens_hint:
       type: display
       markdown: true
-      content: |
-        Für die meisten öffentlichen Beiträge ist kein Zugriffstoken nötig. Für nicht-öffentliche
-        Inhalte oder höhere Rate-Limits können pro Instanz Access-Token direkt in
-        `user/config/plugins/social-linking.yaml` hinterlegt werden:
-
-        ```yaml
-        tokens:
-          norden.social: 'dein-access-token'
-        ```
+      content: PLUGIN_SOCIAL_LINKING.TOKENS_HINT

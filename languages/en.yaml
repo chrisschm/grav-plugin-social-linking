@@ -1,0 +1,51 @@
+PLUGIN_SOCIAL_LINKING:
+  # Status card
+  BOOSTED: 'boosted'
+  VIEW_ORIGINAL_TITLE: 'View original on %s'
+  VIEW_ORIGINAL_ARIA: 'View original'
+  REPLIES_TITLE: 'Replies'
+  BOOSTS_TITLE: 'Boosts'
+  FAVOURITES_TITLE: 'Favourites'
+  VIEW_ON_INSTANCE: 'View on %s ↗'
+  SENSITIVE_MEDIA_DEFAULT: 'Media marked as sensitive'
+  SHOW_MEDIA: 'Show media'
+  EXPAND_HINT: '(show post)'
+
+  # Profile card
+  LOCKED_ACCOUNT: 'Protected account'
+  BOT: 'Bot'
+  FOLLOWERS: 'Followers'
+  FOLLOWING: 'Following'
+  POSTS: 'Posts'
+  JOINED: 'Joined'
+  VERIFIED: 'Verified'
+
+  # Live feed
+  SCOPE_LOCAL: 'This server'
+  SCOPE_REMOTE: 'External servers'
+  SCOPE_FEDERATED: 'All servers'
+  LIVE_FEED_LABEL: 'Live feed · %s · %s'
+  EMPTY_FEED: 'No posts in this feed right now.'
+
+  # Error messages (EmbedRenderer)
+  ERROR_NO_URL: 'No URL or handle was provided (parameter "url").'
+  ERROR_UNKNOWN_TYPE: 'Unknown type "%s".'
+  ERROR_UNKNOWN_SERVICE: 'Unknown service "%s".'
+  ERROR_URL_SERVICE_MISMATCH: '"%s" does not match service "%s".'
+  ERROR_NO_PAGE_CONTEXT: 'No active page context found - this call must happen from within a Grav page.'
+  ERROR_LOAD_FAILED: 'Could not load post: %s'
+
+  # Admin config form (blueprints.yaml)
+  STORAGE_SUBFOLDER: 'Storage folder'
+  STORAGE_SUBFOLDER_HELP: 'Name of the subfolder created inside every page folder for raw data and locally cached media.'
+  TIMEOUT: 'API timeout (seconds)'
+  TIMEOUT_HELP: 'How long to wait for a response from the service API before aborting the call and falling back to an existing cache entry, if any.'
+  TOKENS_HINT: |
+    Most public posts don't need an access token. For non-public content or
+    higher rate limits, you can set per-instance access tokens directly in
+    `user/config/plugins/social-linking.yaml`:
+
+    ```yaml
+    tokens:
+      norden.social: 'your-access-token'
+    ```

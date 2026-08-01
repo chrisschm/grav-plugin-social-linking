@@ -1,0 +1,51 @@
+PLUGIN_SOCIAL_LINKING:
+  # Status-Karte
+  BOOSTED: 'teilte'
+  VIEW_ORIGINAL_TITLE: 'Original auf %s ansehen'
+  VIEW_ORIGINAL_ARIA: 'Original ansehen'
+  REPLIES_TITLE: 'Antworten'
+  BOOSTS_TITLE: 'Geteilt'
+  FAVOURITES_TITLE: 'Favorisiert'
+  VIEW_ON_INSTANCE: 'Auf %s ansehen ↗'
+  SENSITIVE_MEDIA_DEFAULT: 'Als sensibel markierte Medien'
+  SHOW_MEDIA: 'Medien anzeigen'
+  EXPAND_HINT: '(Beitrag anzeigen)'
+
+  # Profilkarte
+  LOCKED_ACCOUNT: 'Geschütztes Konto'
+  BOT: 'Bot'
+  FOLLOWERS: 'Follower'
+  FOLLOWING: 'Folge ich'
+  POSTS: 'Beiträge'
+  JOINED: 'Dabei seit'
+  VERIFIED: 'Verifiziert'
+
+  # Live-Feed
+  SCOPE_LOCAL: 'Dieser Server'
+  SCOPE_REMOTE: 'Externe Server'
+  SCOPE_FEDERATED: 'Alle Server'
+  LIVE_FEED_LABEL: 'Live-Feed · %s · %s'
+  EMPTY_FEED: 'Aktuell keine Beiträge in diesem Feed.'
+
+  # Fehlermeldungen (EmbedRenderer)
+  ERROR_NO_URL: 'Es wurde keine URL bzw. kein Handle angegeben (Parameter "url").'
+  ERROR_UNKNOWN_TYPE: 'Unbekannter type "%s".'
+  ERROR_UNKNOWN_SERVICE: 'Unbekannter Dienst "%s".'
+  ERROR_URL_SERVICE_MISMATCH: '"%s" passt nicht zum Dienst "%s".'
+  ERROR_NO_PAGE_CONTEXT: 'Kein aktiver Seitenkontext gefunden - der Aufruf muss innerhalb einer Grav-Seite erfolgen.'
+  ERROR_LOAD_FAILED: 'Beitrag konnte nicht geladen werden: %s'
+
+  # Admin-Konfigurationsformular (blueprints.yaml)
+  STORAGE_SUBFOLDER: 'Speicherordner'
+  STORAGE_SUBFOLDER_HELP: 'Name des Unterordners, der innerhalb jedes Seitenordners für Rohdaten und lokale Medienkopien angelegt wird.'
+  TIMEOUT: 'API-Timeout (Sekunden)'
+  TIMEOUT_HELP: 'Wie lange auf eine Antwort der Dienst-API gewartet wird, bevor der Aufruf abgebrochen und stattdessen ein evtl. vorhandener Cache-Stand angezeigt wird.'
+  TOKENS_HINT: |
+    Für die meisten öffentlichen Beiträge ist kein Zugriffstoken nötig. Für nicht-öffentliche
+    Inhalte oder höhere Rate-Limits können pro Instanz Access-Token direkt in
+    `user/config/plugins/social-linking.yaml` hinterlegt werden:
+
+    ```yaml
+    tokens:
+      norden.social: 'dein-access-token'
+    ```

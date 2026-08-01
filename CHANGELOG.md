@@ -1,3 +1,9 @@
+# v0.5.0
+## 08/01/2026
+
+1. [](#new)
+    * internationalization: all user-facing strings now go through Grav's language system (`languages/de.yaml`, `languages/en.yaml`, `PLUGIN_SOCIAL_LINKING.*`) - covers rendered templates, `EmbedRenderer` error messages, and the admin config form labels/help in `blueprints.yaml`
+
 # v0.4.0
 ## 08/01/2026
 
