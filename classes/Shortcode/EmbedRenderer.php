@@ -16,12 +16,19 @@ use Grav\Plugin\SocialLinking\Storage\MediaCache;
  * Unterstützte Parameter:
  *
  *   service   Kurzname des Dienstes, z. B. "mastodon" (Default: mastodon)
- *   type      "status" (Einzelbeitrag, Default), "profile" (Profilkarte)
- *             oder "timeline" (Beitragsliste) - profile/timeline sind für
- *             eine spätere Ausbaustufe vorbereitet.
- *   url       Permalink des Beitrags/Profils oder ein Handle
+ *   type      "status" (Einzelbeitrag, Default) · "profile" (Profilkarte) ·
+ *             "timeline" (instanzweiter Live-Feed - "Dieser
+ *             Server"/"Externe Server"/"Alle Server" der Mastodon-
+ *             Weboberfläche; url ist dabei die Feed-URL selbst, z. B.
+ *             "https://instanz.tld/public/local", kein Konto-Handle)
+ *
+ *             Es gibt bewusst KEINEN type für die Beitragshistorie eines
+ *             einzelnen Kontos: geschützte Konten könnten so ausgehebelt
+ *             werden (Beiträge, die eigentlich nur für Follower gedacht
+ *             sind, würden öffentlich auf der Website landen).
+ *   url       Permalink des Beitrags/Profils/Feeds oder ein Handle
  *             (user@instanz.tld). Pflichtfeld.
- *   limit     Nur bei type="timeline": Anzahl Beiträge (Default: 5)
+ *   limit     Nur bei type="timeline": Anzahl Beiträge (Default: 10)
  *   refresh   "true" ignoriert einen vorhandenen Cache-Eintrag und lädt
  *             den Beitrag neu von der API (= "verändern").
  *   delete    "true" entfernt einen vorhandenen Cache-Eintrag inkl. lokaler
@@ -29,6 +36,8 @@ use Grav\Plugin\SocialLinking\Storage\MediaCache;
  */
 class EmbedRenderer
 {
+    private const TIMELINE_TYPES = ['timeline'];
+
     public function __construct(
         private ProviderRegistry $providers,
         private array $config
@@ -70,7 +79,11 @@ class EmbedRenderer
             $this->resolveStaticWebBase($page->path()),
             (string) ($this->config['storage_subfolder'] ?? '_social-linking')
         );
-        $key = EmbedStorage::keyFor($service, $type, $url . ($type === 'timeline' ? '|limit=' . $limit : ''));
+        $key = EmbedStorage::keyFor(
+            $service,
+            $type,
+            $url . (in_array($type, self::TIMELINE_TYPES, true) ? '|limit=' . $limit : '')
+        );
 
         if ($delete) {
             $storage->delete($key);
@@ -82,9 +95,9 @@ class EmbedRenderer
         if ($data === null) {
             try {
                 $fresh = match ($type) {
-                    'status'   => $provider->fetchStatus($url),
-                    'profile'  => $provider->fetchAccount($url),
-                    'timeline' => $provider->fetchTimeline($url, ['limit' => $limit]),
+                    'status'          => $provider->fetchStatus($url),
+                    'profile'         => $provider->fetchAccount($url),
+                    'timeline' => $provider->fetchPublicTimeline($url, ['limit' => $limit]),
                 };
             } catch (\Throwable $e) {
                 $cached = $storage->load($key);

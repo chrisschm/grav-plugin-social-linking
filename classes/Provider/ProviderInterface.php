@@ -36,13 +36,19 @@ interface ProviderInterface
 
     /**
      * Lädt ein Nutzerprofil (type: "profile").
-     * Vorbereitet für eine spätere Ausbaustufe des Plugins.
      */
     public function fetchAccount(string $handleOrUrl, array $options = []): array;
 
     /**
-     * Lädt eine Liste der letzten Beiträge eines Kontos (type: "timeline").
-     * Vorbereitet für eine spätere Ausbaustufe des Plugins.
+     * Lädt den instanzweiten, öffentlichen Live-Feed (alle/lokale/föderierte
+     * Beiträge, unabhängig von einem einzelnen Konto; type: "timeline").
+     * Entspricht den "Dieser Server"/"Externe Server"/"Alle Server"-Reitern
+     * der Mastodon-Weboberfläche.
+     *
+     * Es gibt bewusst KEINE Methode für die Beitragshistorie eines EINZELNEN
+     * Kontos: Ein Konto kann geschützt sein (Beiträge nur für Follower
+     * sichtbar), und eine serverseitig abgerufene, öffentlich eingebettete
+     * Liste würde diesen Schutz faktisch aushebeln.
      */
-    public function fetchTimeline(string $handleOrUrl, array $options = []): array;
+    public function fetchPublicTimeline(string $url, array $options = []): array;
 }

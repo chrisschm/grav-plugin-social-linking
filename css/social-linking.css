@@ -116,10 +116,43 @@
   color: var(--se-muted);
 }
 
-/* Content-Warning */
+/* Content-Warning: <details>/<summary>, per Klick aufklappbar */
 .se-cw {
-  font-weight: 600;
   margin: 0.6rem 0 0.3rem;
+}
+
+.se-cw summary {
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+}
+
+.se-cw summary::-webkit-details-marker {
+  display: none;
+}
+
+.se-cw summary::before {
+  content: "▸ ";
+  color: var(--se-muted);
+}
+
+.se-cw[open] summary::before {
+  content: "▾ ";
+}
+
+.se-cw summary::after {
+  content: " (Beitrag anzeigen)";
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--se-muted);
+}
+
+.se-cw[open] summary::after {
+  content: "";
+}
+
+.se-cw .se-content {
+  margin-top: 0.4rem;
 }
 
 /* Beitragstext (aus content_html der API - enthält bereits Links/Hashtags/Mentions) */
@@ -183,6 +216,64 @@
   object-fit: cover;
   display: block;
   background: var(--se-border);
+}
+
+/* Sensible Medien: standardmäßig weichgezeichnet, per Klick aufdeckbar.
+   Reine CSS-Lösung über eine versteckte Checkbox + zugehöriges <label>,
+   kein JavaScript nötig. */
+.se-reveal-toggle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.se-media {
+  position: relative;
+}
+
+.se-media-sensitive img,
+.se-media-sensitive video {
+  filter: blur(40px);
+  transition: filter 0.15s ease;
+}
+
+.se-reveal-toggle:checked ~ .se-media-sensitive img,
+.se-reveal-toggle:checked ~ .se-media-sensitive video {
+  filter: none;
+}
+
+.se-media-cw-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem;
+  text-align: center;
+  color: #fff;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.se-reveal-toggle:checked ~ .se-media-sensitive .se-media-cw-overlay {
+  display: none;
+}
+
+.se-media-cw-text {
+  font-size: 0.85rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.se-media-cw-button {
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 /* Link-Vorschaukarte */
@@ -379,9 +470,25 @@
   flex-shrink: 0;
 }
 
-/* Timeline (Ausbaustufe) */
+/* Live-Feed (instanzweite Timeline) */
 .se-timeline .se-status {
   margin: 0.75rem 0 0;
+}
+
+.se-timeline-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--se-muted);
+  padding-bottom: 0.3rem;
+}
+
+.se-timeline-empty {
+  color: var(--se-muted);
+  font-size: 0.9rem;
+  margin: 0.5rem 0 0;
 }
 
 /* Fehlerdarstellung */

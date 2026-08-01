@@ -11,9 +11,14 @@ use Grav\Plugin\SocialLinking\Http\SimpleHttpClient;
  * API-Referenz: https://docs.joinmastodon.org/client/intro/
  *
  * Unterstützte Referenzen:
- *  - Status-Permalink:  https://instanz.tld/@user/1234567890123456
- *  - Profil-Permalink:  https://instanz.tld/@user
- *  - Handle:            user@instanz.tld  oder  @user@instanz.tld
+ *  - Status-Permalink:       https://instanz.tld/@user/1234567890123456
+ *  - Profil-Permalink:       https://instanz.tld/@user
+ *  - Handle:                 user@instanz.tld  oder  @user@instanz.tld
+ *  - Instanzweiter Live-Feed: https://instanz.tld/public
+ *                             https://instanz.tld/public/local
+ *                             https://instanz.tld/public/remote
+ *    (exakt die URLs, die man aus der Adresszeile der Mastodon-Weboberfläche
+ *    kopiert - siehe die Reiter "Dieser Server"/"Externe Server"/"Alle Server")
  */
 class MastodonProvider implements ProviderInterface
 {
@@ -34,6 +39,9 @@ class MastodonProvider implements ProviderInterface
 
     public function supports(string $reference): bool
     {
+        if ($this->isPublicTimelineUrl($reference)) {
+            return true;
+        }
         if (preg_match('#^https?://[^/]+/@[^/]+#', $reference)) {
             return true;
         }
@@ -68,18 +76,40 @@ class MastodonProvider implements ProviderInterface
         ]);
     }
 
-    public function fetchTimeline(string $handleOrUrl, array $options = []): array
-    {
-        [$instance, $acct] = $this->parseAccountReference($handleOrUrl);
-        $accountRaw = $this->lookupAccount($instance, $acct);
+    /*
+     * HINWEIS: Es gibt hier bewusst KEIN fetchTimeline() für die
+     * Beitragshistorie eines einzelnen Kontos (mehr). Ein Konto kann auf
+     * Mastodon als "geschützt" markiert sein, sodass Beiträge nur für
+     * bestätigte Follower sichtbar sind. Eine serverseitig abgerufene und
+     * auf einer öffentlichen Website eingebettete Liste würde diesen Schutz
+     * faktisch aushebeln - unabhängig davon, ob die Mastodon-API einer
+     * konkreten Anfrage im Einzelfall überhaupt Daten liefern würde. Diese
+     * Funktion wird daher absichtlich nicht angeboten. type="timeline"
+     * (instanzweiter Live-Feed, s. u.) ist davon nicht betroffen, da dort per
+     * Definition nur ohnehin öffentlich sichtbare Beiträge auftauchen.
+     */
 
-        $limit = max(1, min(40, (int) ($options['limit'] ?? 5)));
-        $endpoint = sprintf(
-            'https://%s/api/v1/accounts/%s/statuses?%s',
-            $instance,
-            $accountRaw['id'],
-            http_build_query(['limit' => $limit, 'exclude_replies' => 'true'])
-        );
+    /**
+     * Lädt den instanzweiten Live-Feed (öffentliche Beiträge aller/lokaler/
+     * föderierter Konten - unabhängig von einem einzelnen Nutzer). Nutzt
+     * https://docs.joinmastodon.org/methods/timelines/#public.
+     *
+     * @param string $url Die aus der Mastodon-Weboberfläche kopierte URL,
+     *                     z. B. "https://norden.social/public/local"
+     */
+    public function fetchPublicTimeline(string $url, array $options = []): array
+    {
+        [$instance, $scope] = $this->parsePublicTimelineUrl($url);
+
+        $limit = max(1, min(40, (int) ($options['limit'] ?? 10)));
+        $query = ['limit' => $limit];
+        if ($scope === 'local') {
+            $query['local'] = 'true';
+        } elseif ($scope === 'remote') {
+            $query['remote'] = 'true';
+        }
+
+        $endpoint = sprintf('https://%s/api/v1/timelines/public?%s', $instance, http_build_query($query));
         $statusesRaw = $this->http->getJson($endpoint, $this->headersFor($instance));
 
         $statuses = [];
@@ -91,10 +121,37 @@ class MastodonProvider implements ProviderInterface
             'type'       => 'timeline',
             'service'    => $this->getKey(),
             'instance'   => $instance,
-            'source_url' => $handleOrUrl,
-            'account'    => $this->normalizeAccount($accountRaw, $instance),
+            'scope'      => $scope,
+            'source_url' => $url,
             'statuses'   => $statuses,
         ];
+    }
+
+    private function isPublicTimelineUrl(string $reference): bool
+    {
+        return (bool) preg_match('#^https?://[^/]+/public(/(local|remote))?/?(\?.*)?$#', $reference);
+    }
+
+    /**
+     * Zerlegt z. B. "https://norden.social/public/local" in
+     * ["norden.social", "local"]. Ohne "/local" bzw. "/remote"-Suffix wird
+     * "federated" angenommen (= "Alle Server"/kombinierter Feed).
+     */
+    private function parsePublicTimelineUrl(string $url): array
+    {
+        $host = parse_url($url, PHP_URL_HOST);
+        if (!$host) {
+            throw new \InvalidArgumentException('Konnte keine Instanz aus der URL lesen: ' . $url);
+        }
+
+        $path = trim(parse_url($url, PHP_URL_PATH) ?? '', '/');
+        $scope = match (true) {
+            str_ends_with($path, '/local') => 'local',
+            str_ends_with($path, '/remote') => 'remote',
+            default => 'federated',
+        };
+
+        return [$host, $scope];
     }
 
     private function lookupAccount(string $instance, string $acct): array

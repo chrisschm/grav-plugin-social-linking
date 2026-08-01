@@ -38,12 +38,36 @@ Das genügt für den Regelfall (einzelner Beitrag). Vollständige Parameterliste
 
 | Parameter | Pflicht | Default     | Bedeutung |
 |-----------|---------|-------------|-----------|
-| `url`     | ja      | –           | Permalink des Beitrags/Profils **oder** ein Handle (`user@instanz.tld`) |
+| `url`     | ja      | –           | Permalink des Beitrags/Profils/Feeds **oder** ein Handle (`user@instanz.tld`) |
 | `service` | nein    | `mastodon`  | Welcher Dienst-Provider genutzt wird |
-| `type`    | nein    | `status`    | `status` (Einzelbeitrag) · `profile` · `timeline` (siehe „Ausbaustufen“) |
-| `limit`   | nein    | `5`         | Nur bei `type="timeline"`: Anzahl Beiträge |
+| `type`    | nein    | `status`    | `status` (Einzelbeitrag) · `profile` (Profilkarte) · `timeline` (instanzweiter Live-Feed, siehe unten) |
+| `limit`   | nein    | `10`        | Nur bei `type="timeline"`: Anzahl Beiträge |
 | `refresh` | nein    | `false`     | `true` lädt den Beitrag **neu** von der API und überschreibt den Cache – so wird ein „veränderter“ Beitrag übernommen |
 | `delete`  | nein    | `false`     | `true` **löscht** den lokalen Cache (JSON + Medien) für genau diesen Aufruf wieder; es wird nichts ausgegeben |
+
+**`type="timeline"`** zeigt den instanzweiten öffentlichen Live-Feed
+(`url` ist die Feed-URL selbst - genau das, was in der Adresszeile steht,
+wenn man in der Mastodon-Weboberfläche auf „Dieser Server“/„Externe
+Server“/„Alle Server“ klickt):
+
+```
+[social-embed type="timeline" url="https://norden.social/public/local"]   {# Dieser Server #}
+[social-embed type="timeline" url="https://norden.social/public/remote"]  {# Externe Server #}
+[social-embed type="timeline" url="https://norden.social/public"]         {# Alle Server #}
+```
+
+Der `remote`-Parameter für ausschließlich föderierte Beiträge wird nicht von
+jeder Instanz-Version unterstützt; ältere Server liefern dann ggf. den
+vollständigen (kombinierten) Feed statt einer echten Remote-only-Filterung.
+
+**Bewusst NICHT unterstützt: die Beitragshistorie eines einzelnen Kontos.**
+Grund: Mastodon-Konten können als "geschützt" markiert sein, sodass Beiträge
+nur für bestätigte Follower sichtbar sind. Eine serverseitig abgerufene und
+öffentlich eingebettete Liste würde diesen Schutz faktisch aushebeln -
+unabhängig davon, ob die API im Einzelfall überhaupt Daten liefern würde.
+Das oben beschriebene `type="timeline"` ist davon nicht betroffen, da dort
+per Definition nur ohnehin öffentlich sichtbare Beiträge auftauchen (der
+instanzweite Feed, keine Konto-spezifische Liste).
 
 Beispiele:
 
@@ -143,6 +167,27 @@ sichtbare Beiträge ist das unproblematisch; sollen ausschließlich
 nicht-öffentliche Beiträge eingebunden werden, empfiehlt sich zusätzlicher
 Zugriffsschutz auf Server-Ebene.
 
+## Content Warnings & sensible Medien
+
+Mastodon-Beiträge können zwei unabhängige Warnhinweise tragen:
+
+- **Content Warning** (`spoiler_text`): eine Kurzbeschreibung, hinter der der
+  eigentliche Beitragstext standardmäßig verborgen ist. Wir bilden das über
+  ein natives `<details>`/`<summary>`-Element ab - der Beitragstext ist per
+  Klick aufklappbar, ganz ohne JavaScript.
+- **Sensible Medien** (`sensitive: true`): gilt für alle Anhänge eines
+  Beitrags gemeinsam (Mastodon kennt keine pro-Bild-Markierung). Diese werden
+  standardmäßig weichgezeichnet dargestellt, mit einem Overlay zum Aufdecken
+  per Klick - ebenfalls rein CSS-basiert (Checkbox-Hack), kein JavaScript.
+
+Beide Zustände sind rein clientseitig und starten für jeden Besucher
+zurückgesetzt (kein Merken über Seitenaufrufe hinweg). Eine eventuelle
+"immer automatisch aufklappen"-Einstellung, die ein Mastodon-Nutzer für die
+eigene Ansicht in seinem Account konfiguriert hat, ist über die öffentliche
+API nicht auslesbar und wird hier folglich nicht berücksichtigt - alle
+Besucher der Website sehen den gleichen, sicheren Default (eingeklappt/
+weichgezeichnet).
+
 ## Theme-Integration
 
 Die Darstellung orientiert sich optisch an Mastodon (Avatar, Name/Handle,
@@ -171,21 +216,35 @@ lassen sich die Werte gezielt im eigenen Theme-CSS überschreiben, z. B.:
 .se-mastodon { --se-accent: #ff6a00; --se-radius: 4px; }
 ```
 
+## Bekannte Einschränkungen / ToDo
+
+- **Keine Internationalisierung:** Alle im Plugin sichtbaren Texte (Twig-
+  Templates wie „Follower“, „Dabei seit“, „Dieser Server“, „Auf {instanz}
+  ansehen“, „Medien anzeigen“, sowie PHP-seitige Fehlermeldungen) sind aktuell
+  hart als Deutsch verdrahtet - es gibt noch keine `languages/de.yaml` /
+  `languages/en.yaml` mit Grav-typischen Übersetzungs-Keys. Für den
+  produktiven Einsatz auf mehrsprachigen oder englischsprachigen Grav-Sites
+  wäre das nachzuziehen.
+- **Keine Pagination:** Bei `type="timeline"` (instanzweiter Live-Feed) wird
+  immer nur der neueste Ausschnitt (`limit`, Default 10) geladen, ein
+  "weitere laden"-Mechanismus fehlt noch.
+- **Content-Warning-Präferenz nicht auslesbar:** Eine "automatisch
+  aufklappen"-Einstellung, die ein Mastodon-Nutzer für die eigene Ansicht
+  konfiguriert hat, ist über die öffentliche API nicht ermittelbar (siehe
+  Abschnitt "Content Warnings & sensible Medien" oben) - alle Website-
+  Besucher sehen denselben sicheren Default.
+
 ## Erweiterbarkeit
 
 Die Aufrufkonvention ist bewusst so angelegt, dass sie über den aktuellen
 Funktionsumfang hinaus trägt:
 
-- **`type="profile"`** und **`type="timeline"`** sind im Code, im
-  Datenschema und in eigenen Twig-Partials (`mastodon-profile.html.twig`,
-  `mastodon-timeline.html.twig`) bereits vorbereitet, aber noch nicht für
-  den produktiven Einsatz ausgefeilt (z. B. fehlt noch verfeinertes Styling
-  für Profilkarten und Pagination für Timelines). Der Aufruf
-  `[social-embed type="timeline" url="christiansagt@norden.social" limit="5"]`
-  funktioniert bereits als Grundgerüst.
+- **`type="profile"`** ist für den produktiven Einsatz ausgebaut
+  (Follower/Folge-ich/Beiträge, Bio, Dabei-seit, benutzerdefinierte Profilfelder
+  mit Verifizierungs-Häkchen).
 - **Weitere Dienste**: Ein neuer Dienst wird unterstützt, indem
   `Grav\Plugin\SocialLinking\Provider\ProviderInterface` implementiert und in
-  `social-linking.php`/`shortcodes/SocialEmbedShortcode.php` registriert
+  `social-linking.php`/`shortcodes/SocialLinkShortcode.php` registriert
   wird. Speicherung, Medien-Zwischenspeicherung und der Shortcode-Parameter
   `service="..."` funktionieren dann automatisch mit.
 

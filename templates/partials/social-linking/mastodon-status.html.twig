@@ -24,13 +24,20 @@
     </div>
 
     {% if s.spoiler_text %}
-        <p class="se-cw">{{ s.spoiler_text }}</p>
+        <details class="se-cw">
+            <summary>{{ s.spoiler_text }}</summary>
+            <div class="se-content">{{ s.content_html|raw }}</div>
+        </details>
+    {% else %}
+        <div class="se-content">{{ s.content_html|raw }}</div>
     {% endif %}
 
-    <div class="se-content">{{ s.content_html|raw }}</div>
-
     {% if s.media_attachments|length %}
-        <div class="se-media se-media-{{ s.media_attachments|length > 1 ? 'grid' : 'single' }}">
+        {% set revealId = 'se-reveal-' ~ s.instance ~ '-' ~ s.id %}
+        {% if s.sensitive %}
+            <input type="checkbox" id="{{ revealId }}" class="se-reveal-toggle">
+        {% endif %}
+        <div class="se-media se-media-{{ s.media_attachments|length > 1 ? 'grid' : 'single' }}{{ s.sensitive ? ' se-media-sensitive' : '' }}">
             {% for m in s.media_attachments %}
                 {% if m.type == 'video' %}
                     <video src="{{ m.url }}" poster="{{ m.preview_url }}" controls></video>
@@ -40,6 +47,12 @@
                     <img src="{{ m.preview_url ?: m.url }}" alt="{{ m.description }}" loading="lazy">
                 {% endif %}
             {% endfor %}
+            {% if s.sensitive %}
+                <label for="{{ revealId }}" class="se-media-cw-overlay">
+                    <span class="se-media-cw-text">{{ s.spoiler_text ?: 'Als sensibel markierte Medien' }}</span>
+                    <span class="se-media-cw-button">Medien anzeigen</span>
+                </label>
+            {% endif %}
         </div>
     {% endif %}
 

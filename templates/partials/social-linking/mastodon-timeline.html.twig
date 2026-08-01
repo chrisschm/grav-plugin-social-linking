@@ -1,6 +1,16 @@
+{% set scopeLabels = {
+    'local': 'Dieser Server',
+    'remote': 'Externe Server',
+    'federated': 'Alle Server'
+} %}
 <div class="se se-mastodon se-timeline">
-    {% include 'partials/social-linking/mastodon-profile.html.twig' with {embed: {account: embed.account}} only %}
+    <div class="se-timeline-header">
+        <svg class="se-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20 15.3 15.3 0 0 1 0-20"/></svg>
+        <span>Live-Feed · {{ embed.instance }} · {{ scopeLabels[embed.scope] ?? embed.scope }}</span>
+    </div>
     {% for status in embed.statuses %}
         {% include 'partials/social-linking/mastodon-status.html.twig' with {embed: status} only %}
+    {% else %}
+        <p class="se-timeline-empty">Aktuell keine Beiträge in diesem Feed.</p>
     {% endfor %}
 </div>

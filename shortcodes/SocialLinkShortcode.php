@@ -14,8 +14,8 @@ use Thunder\Shortcode\Shortcode\ShortcodeInterface;
  *
  *   [social-embed url="https://norden.social/@christiansagt/113..."]
  *   [social-embed service="mastodon" type="status" url="..." refresh="true"]
- *   [social-embed type="profile" url="christiansagt@norden.social"]      (Ausbaustufe)
- *   [social-embed type="timeline" url="christiansagt@norden.social" limit="5"] (Ausbaustufe)
+ *   [social-embed type="profile" url="christiansagt@norden.social"]
+ *   [social-embed type="timeline" url="https://norden.social/public/local"]
  *   [social-embed url="..." delete="true"]
  *
  * Benötigt das Plugin "Shortcode Core" (getgrav/grav-plugin-shortcode-core).
