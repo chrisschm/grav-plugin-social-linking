@@ -57,21 +57,21 @@ class EmbedRenderer
         $limit   = (int) ($params['limit'] ?? 5);
 
         if ($url === '') {
-            return $this->renderError('Es wurde keine URL bzw. kein Handle angegeben (Parameter "url").');
+            return $this->renderError('PLUGIN_SOCIAL_LINKING.ERROR_NO_URL');
         }
         if (!in_array($type, ['status', 'profile', 'timeline'], true)) {
-            return $this->renderError(sprintf('Unbekannter type "%s".', $type));
+            return $this->renderError('PLUGIN_SOCIAL_LINKING.ERROR_UNKNOWN_TYPE', [$type]);
         }
 
         $provider = $this->providers->get($service);
         if (!$provider) {
-            return $this->renderError(sprintf('Unbekannter Dienst "%s".', $service));
+            return $this->renderError('PLUGIN_SOCIAL_LINKING.ERROR_UNKNOWN_SERVICE', [$service]);
         }
         if (!$provider->supports($url)) {
-            return $this->renderError(sprintf('"%s" passt nicht zum Dienst "%s".', $url, $service));
+            return $this->renderError('PLUGIN_SOCIAL_LINKING.ERROR_URL_SERVICE_MISMATCH', [$url, $service]);
         }
         if (!$page) {
-            return $this->renderError('Kein aktiver Seitenkontext gefunden - der Aufruf muss innerhalb einer Grav-Seite erfolgen.');
+            return $this->renderError('PLUGIN_SOCIAL_LINKING.ERROR_NO_PAGE_CONTEXT');
         }
 
         $storage = new EmbedStorage(
@@ -102,7 +102,7 @@ class EmbedRenderer
             } catch (\Throwable $e) {
                 $cached = $storage->load($key);
                 if ($cached === null) {
-                    return $this->renderError('Beitrag konnte nicht geladen werden: ' . $e->getMessage());
+                    return $this->renderError('PLUGIN_SOCIAL_LINKING.ERROR_LOAD_FAILED', [$e->getMessage()]);
                 }
                 return $this->renderTemplate($type, $cached);
             }
@@ -149,9 +149,15 @@ class EmbedRenderer
         return $twig->render($template, ['embed' => $data]);
     }
 
-    private function renderError(string $message): string
+    /**
+     * @param string $key    Sprachdatei-Key, z. B. "PLUGIN_SOCIAL_LINKING.ERROR_NO_URL"
+     * @param array  $params Optionale sprintf-Parameter (%s-Platzhalter in der Sprachdatei)
+     */
+    private function renderError(string $key, array $params = []): string
     {
-        $twig = Grav::instance()['twig']->twig();
+        $grav = Grav::instance();
+        $message = $grav['language']->translate([$key, ...$params]);
+        $twig = $grav['twig']->twig();
         return $twig->render('partials/social-linking/error.html.twig', ['message' => $message]);
     }
 

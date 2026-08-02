@@ -6,7 +6,7 @@
         <div class="se-boost-header">
             <svg class="se-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></svg>
             <a href="{{ outer.account.url }}" target="_blank" rel="noopener noreferrer nofollow">{{ outer.account.display_name }}</a>
-            <span>teilte</span>
+            <span>{{ 'PLUGIN_SOCIAL_LINKING.BOOSTED'|t }}</span>
         </div>
     {% endif %}
 
@@ -18,14 +18,14 @@
             <a class="se-display-name" href="{{ s.account.url }}" target="_blank" rel="noopener noreferrer nofollow">{{ s.account.display_name }}</a>
             <span class="se-handle">@{{ s.account.acct }}</span>
         </div>
-        <a class="se-source-link" href="{{ s.url }}" target="_blank" rel="noopener noreferrer nofollow" title="Original auf {{ s.instance }} ansehen" aria-label="Original ansehen">
+        <a class="se-source-link" href="{{ s.url }}" target="_blank" rel="noopener noreferrer nofollow" title="{{ ['PLUGIN_SOCIAL_LINKING.VIEW_ORIGINAL_TITLE', s.instance]|tl }}" aria-label="{{ 'PLUGIN_SOCIAL_LINKING.VIEW_ORIGINAL_ARIA'|t }}">
             <svg class="se-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5M12 8h.01"/></svg>
         </a>
     </div>
 
     {% if s.spoiler_text %}
         <details class="se-cw">
-            <summary>{{ s.spoiler_text }}</summary>
+            <summary>{{ s.spoiler_text }}<span class="se-cw-hint">{{ 'PLUGIN_SOCIAL_LINKING.EXPAND_HINT'|t }}</span></summary>
             <div class="se-content">{{ s.content_html|raw }}</div>
         </details>
     {% else %}
@@ -49,8 +49,8 @@
             {% endfor %}
             {% if s.sensitive %}
                 <label for="{{ revealId }}" class="se-media-cw-overlay">
-                    <span class="se-media-cw-text">{{ s.spoiler_text ?: 'Als sensibel markierte Medien' }}</span>
-                    <span class="se-media-cw-button">Medien anzeigen</span>
+                    <span class="se-media-cw-text">{{ s.spoiler_text ?: ('PLUGIN_SOCIAL_LINKING.SENSITIVE_MEDIA_DEFAULT'|t) }}</span>
+                    <span class="se-media-cw-button">{{ 'PLUGIN_SOCIAL_LINKING.SHOW_MEDIA'|t }}</span>
                 </label>
             {% endif %}
         </div>
@@ -71,18 +71,18 @@
 
     <div class="se-footer">
         {% if s.created_at %}<time datetime="{{ s.created_at }}">{{ s.created_at|date('d.m.Y, H:i') }}</time>{% endif %}
-        <span class="se-stat" title="Antworten">
+        <span class="se-stat" title="{{ 'PLUGIN_SOCIAL_LINKING.REPLIES_TITLE'|t }}">
             <svg class="se-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             {{ s.stats.replies_count }}
         </span>
-        <span class="se-stat" title="Geteilt">
+        <span class="se-stat" title="{{ 'PLUGIN_SOCIAL_LINKING.BOOSTS_TITLE'|t }}">
             <svg class="se-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></svg>
             {{ s.stats.reblogs_count }}
         </span>
-        <span class="se-stat" title="Favorisiert">
+        <span class="se-stat" title="{{ 'PLUGIN_SOCIAL_LINKING.FAVOURITES_TITLE'|t }}">
             <svg class="se-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.7-4.35-9.3-8.1C1 10.1 1.6 6.7 4.6 5.2 7 4 9.6 4.9 12 7.3 14.4 4.9 17 4 19.4 5.2c3 1.5 3.6 4.9 1.9 7.7C18.7 16.65 12 21 12 21z"/></svg>
             {{ s.stats.favourites_count }}
         </span>
-        <a class="se-permalink" href="{{ s.url }}" target="_blank" rel="noopener noreferrer nofollow">Auf {{ s.instance }} ansehen ↗</a>
+        <a class="se-permalink" href="{{ s.url }}" target="_blank" rel="noopener noreferrer nofollow">{{ ['PLUGIN_SOCIAL_LINKING.VIEW_ON_INSTANCE', s.instance]|tl }}</a>
     </div>
 </div>

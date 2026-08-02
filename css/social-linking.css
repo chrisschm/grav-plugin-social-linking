@@ -140,15 +140,15 @@
   content: "▾ ";
 }
 
-.se-cw summary::after {
-  content: " (Beitrag anzeigen)";
+.se-cw-hint {
+  margin-left: 0.3rem;
   font-weight: 400;
   font-size: 0.8rem;
   color: var(--se-muted);
 }
 
-.se-cw[open] summary::after {
-  content: "";
+.se-cw[open] .se-cw-hint {
+  display: none;
 }
 
 .se-cw .se-content {

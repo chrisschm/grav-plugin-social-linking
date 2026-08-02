@@ -1,16 +1,17 @@
-{% set scopeLabels = {
-    'local': 'Dieser Server',
-    'remote': 'Externe Server',
-    'federated': 'Alle Server'
+{% set scopeKeys = {
+    'local': 'PLUGIN_SOCIAL_LINKING.SCOPE_LOCAL',
+    'remote': 'PLUGIN_SOCIAL_LINKING.SCOPE_REMOTE',
+    'federated': 'PLUGIN_SOCIAL_LINKING.SCOPE_FEDERATED'
 } %}
+{% set scopeLabel = (scopeKeys[embed.scope] ?? null) ? (scopeKeys[embed.scope]|t) : embed.scope %}
 <div class="se se-mastodon se-timeline">
     <div class="se-timeline-header">
         <svg class="se-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20 15.3 15.3 0 0 1 0-20"/></svg>
-        <span>Live-Feed · {{ embed.instance }} · {{ scopeLabels[embed.scope] ?? embed.scope }}</span>
+        <span>{{ ['PLUGIN_SOCIAL_LINKING.LIVE_FEED_LABEL', embed.instance, scopeLabel]|tl }}</span>
     </div>
     {% for status in embed.statuses %}
         {% include 'partials/social-linking/mastodon-status.html.twig' with {embed: status} only %}
     {% else %}
-        <p class="se-timeline-empty">Aktuell keine Beiträge in diesem Feed.</p>
+        <p class="se-timeline-empty">{{ 'PLUGIN_SOCIAL_LINKING.EMPTY_FEED'|t }}</p>
     {% endfor %}
 </div>

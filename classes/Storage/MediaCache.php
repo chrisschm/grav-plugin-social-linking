@@ -28,7 +28,9 @@ class MediaCache
 
     private static function localizeTimeline(array $data, EmbedStorage $storage, string $key, SimpleHttpClient $client): array
     {
-        $data['account'] = self::localizeAccount($data['account'] ?? [], $storage, $key . '_account', $client);
+        if (!empty($data['account'])) {
+            $data['account'] = self::localizeAccount($data['account'], $storage, $key . '_account', $client);
+        }
 
         foreach ($data['statuses'] as $i => $status) {
             $data['statuses'][$i] = self::localizeStatus($status, $storage, $key . '_' . $i, $client);

@@ -1,3 +1,10 @@
+# v0.5.1
+## 08/02/2026
+
+1. [](#bugfix)
+    * v0.5.0 shipped language files and a translated admin form, but the actual `|t`/`|tl` calls in the templates and in `EmbedRenderer` were still missing - i18n now actually applies everywhere
+    * removed an accidental duplicated copy of large parts of the plugin nested under `classes/`
+
 # v0.5.0
 ## 08/01/2026
 
