@@ -1,0 +1,17 @@
+{
+    "name": "chschmidt/grav-plugin-social-linking",
+    "type": "grav-plugin",
+    "description": "Bindet Beiträge (und später Profile/Timelines) von Mastodon und kompatiblen Diensten als lokal zwischengespeicherte, themefähige Links/Embeds ein.",
+    "keywords": ["grav", "plugin", "mastodon", "activitypub", "fediverse", "social", "embed", "shortcode"],
+    "homepage": "https://codeberg.org/chschmidt/grav-plugin-social-linking",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Christian Schmidt",
+            "email": "chschmidt@noreply.codeberg.org"
+        }
+    ],
+    "require": {
+        "php": ">=7.4.0"
+    }
+}
