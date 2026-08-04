@@ -274,10 +274,13 @@ tokens:                             # optional, für nicht-öffentliche Inhalte
 ## Voraussetzungen
 
 - Grav 1.7 oder 2.0
-- **PHP ≥ 8.3** – der Code nutzt durchgehend PHP-8-Syntax (Constructor Property
-  Promotion, `match`-Ausdrücke, `str_starts_with()`). Grav 1.7 selbst käme
-  offiziell mit PHP ≥ 7.3.6 (empfohlen 7.4) aus, das Plugin benötigt jedoch
-  in jedem Fall PHP 8.3 oder neuer, unabhängig von der Grav-Version.
-  Getestet mit PHP 8.3 (Grav 1.7) und PHP 8.5 (Grav 2.0).
+- **PHP ≥ 8.0** – der Code nutzt durchgehend PHP-8-Syntax (Constructor Property
+  Promotion, `match`-Ausdrücke, `str_starts_with()`) und läuft damit nicht auf
+  älteren PHP-Versionen. Grav 1.7 selbst käme offiziell mit PHP ≥ 7.3.6
+  (empfohlen 7.4) aus, das Plugin benötigt jedoch in jedem Fall PHP 8.0 oder
+  neuer, unabhängig von der Grav-Version.
+  Getestet und offiziell unterstützt wird aktuell **PHP 8.3 und 8.5**
+  (aktuelle Testumgebung: Ubuntu 24.04 LTS). PHP 8.0–8.2 sollte laut
+  verwendeter Syntax funktionieren, wurde bisher aber nicht verifiziert.
 - Plugin **Shortcode Core** (`shortcode-core`)
 - PHP mit `curl`-Extension (empfohlen) oder aktivierten `allow_url_fopen`-Streams als Fallback

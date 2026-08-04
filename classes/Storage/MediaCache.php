@@ -14,10 +14,8 @@ use Grav\Plugin\SocialLinking\Http\SimpleHttpClient;
  */
 class MediaCache
 {
-    public static function localize(array $data, EmbedStorage $storage, string $key): array
+    public static function localize(array $data, EmbedStorage $storage, string $key, SimpleHttpClient $client): array
     {
-        $client = new SimpleHttpClient();
-
         return match (true) {
             isset($data['statuses']) && is_array($data['statuses']) => self::localizeTimeline($data, $storage, $key, $client),
             isset($data['content_html']) || array_key_exists('media_attachments', $data) => self::localizeStatus($data, $storage, $key, $client),

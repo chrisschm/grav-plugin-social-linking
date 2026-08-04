@@ -49,3 +49,17 @@ PLUGIN_SOCIAL_LINKING:
     tokens:
       norden.social: 'your-access-token'
     ```
+  ALLOWED_PRIVATE_HOSTS_HINT: |
+    For security reasons (SSRF protection), the plugin rejects requests to
+    private/local/internal addresses by default (e.g. 127.0.0.1, 10.0.0.0/8,
+    169.254.169.254, ::1) - both for API calls and for downloaded media. If you
+    deliberately want to embed content from an internal Mastodon instance, you can
+    allow it explicitly, directly in `user/config/plugins/social-linking.yaml`:
+
+    ```yaml
+    allowed_private_hosts:
+      - 'mastodon.internal.example'
+    ```
+
+    **Warning:** any host listed here becomes reachable from the server, even if it
+    sits on an internal network - only add hosts you trust.

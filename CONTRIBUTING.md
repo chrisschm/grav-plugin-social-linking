@@ -43,9 +43,10 @@ don't need to be touched. See the docblock in `ProviderInterface.php` for detail
 ## Before opening a pull request
 
 1. **Target branch:** please branch from and target `main`.
-2. **PHP version:** the plugin supports PHP >= 7.4 (see `composer.json` / `blueprints.yaml`). Please avoid
-   syntax or functions that require a newer PHP version unless you also raise the requirement in both
-   files *and* discuss it in an issue first — this affects every user on shared/older hosting.
+2. **PHP version:** the plugin supports PHP >= 8.0 (see `composer.json`; README documents PHP 8.3/8.5 as
+   the tested/supported floor). Please avoid syntax or functions that require a newer PHP version unless
+   you also raise the requirement in `composer.json` and README *and* discuss it in an issue first — this
+   affects every user on shared/older hosting.
 3. **Syntax check:** there is currently no automated lint/test step in CI for pull requests. Please run a
    PHP syntax check yourself on any changed PHP file before submitting:
    ```bash
@@ -109,8 +110,8 @@ ergänzen — Speicherung, Medien-Cache und Rendering müssen dafür nicht angef
 
 **Vor einem Pull Request:**
 - Ziel-Branch ist immer `main`.
-- Unterstützt wird PHP >= 7.4 (siehe `composer.json` bzw. `blueprints.yaml`). Neuere PHP-Syntax bitte nur
-  nach Rücksprache in einem Issue verwenden.
+- Unterstützt wird PHP >= 8.0 (siehe `composer.json`; README nennt PHP 8.3/8.5 als getestete/
+  unterstützte Untergrenze). Neuere PHP-Syntax bitte nur nach Rücksprache in einem Issue verwenden.
 - Es gibt aktuell **keinen automatisierten Lint/Test-Schritt** in der CI. Bitte selbst `php -l` auf
   geänderten PHP-Dateien laufen lassen.
 - Kurz in der PR-Beschreibung angeben, wie manuell getestet wurde (Grav-Version, `type`, Provider,

@@ -34,7 +34,9 @@ user/plugins/social-linking/
 ├── blueprints.yaml                 # Admin panel form + metadata (required filename!)
 ├── social-linking.yaml             # default configuration values (also required, see "Notable past bugs")
 ├── classes/
-│   ├── Http/SimpleHttpClient.php          # lightweight HTTP client (curl preferred, stream fallback)
+│   ├── Http/
+│   │   ├── SimpleHttpClient.php            # lightweight HTTP client (curl preferred, stream fallback)
+│   │   └── SsrfGuard.php                   # validates every outgoing request against private/internal targets
 │   ├── Provider/
 │   │   ├── ProviderInterface.php          # extension point for further services
 │   │   ├── ProviderRegistry.php
@@ -104,10 +106,46 @@ Media URLs deliberately reference the **physical path relative to `GRAV_ROOT`**
 | `storage_subfolder` | Name of the per-page cache subfolder, default `_social-linking` |
 | `timeout` | API timeout in seconds, default 10 |
 | `tokens` | Optional per-instance access tokens (YAML-only, deliberately not exposed as an Admin form field) |
+| `allowed_private_hosts` | Opt-in list of hostnames/IPs excluded from the SSRF guard's private-range check, empty by default (YAML-only, see "SSRF protection" below) |
 
 If you add a new configurable option, it needs an entry in `blueprints.yaml` and a default in
 `social-linking.yaml` — and, if it's user-facing text, translation keys in `languages/*.yaml` (see
 "Internationalization" below).
+
+## SSRF protection
+
+Every outgoing HTTP request the plugin makes goes through `SimpleHttpClient`, which in turn
+delegates target validation to `classes/Http/SsrfGuard.php` before opening any connection. This
+covers **two** distinct request origins, both fixed in v0.5.2:
+
+1. **Editor-controlled:** the `url` parameter of `[social-embed]` / `social_embed()`, resolved by
+   `MastodonProvider` into an API endpoint URL.
+2. **Remote-controlled:** media URLs (avatar, header, attachments, link-preview card image) that
+   come back *inside the API response* of the queried instance and are fetched by `MediaCache`. A
+   malicious or compromised remote instance could otherwise redirect the server to an internal
+   target purely through its JSON response, without any local editor involvement.
+
+`SsrfGuard::assertAllowedAndResolve()`:
+- rejects any scheme other than `http`/`https` (blocks `file://`, `gopher://`, etc.),
+- resolves the hostname (A + AAAA records) and rejects the request if any resolved address falls
+  in a private, loopback, link-local, or other reserved IPv4/IPv6 range (including CGNAT,
+  IPv4-mapped IPv6, multicast, and the usual RFC 1918/RFC 4193 ranges), and rejects the literal
+  hostname `localhost`,
+- returns the validated IP so the caller can pin the connection to it.
+
+`SimpleHttpClient` does **not** let curl/the stream wrapper follow redirects automatically —
+`CURLOPT_FOLLOWLOCATION` is off and the stream context sets `follow_location => 0`. Instead, each
+`Location` target is re-validated through the guard before being followed (up to 5 hops), since
+validating only the first URL would be meaningless if a later redirect could point anywhere. For
+curl requests, the validated IP is additionally pinned via `CURLOPT_RESOLVE` to reduce exposure to
+DNS-rebinding (the request connects to the already-checked IP rather than re-resolving the
+hostname at connect time), while TLS SNI/certificate validation still runs against the hostname.
+
+Site owners who deliberately want to embed a private/internal instance (e.g. a company-internal
+Mastodon on a LAN-only Grav install) can opt a specific host out of the private-range check via
+`allowed_private_hosts` in `social-linking.yaml` — off by default, YAML-only (no Admin form field,
+same pattern as `tokens`), documented in the Admin panel help text as a deliberate trust decision:
+any listed host becomes reachable from the server regardless of network location.
 
 ## Provider architecture
 
