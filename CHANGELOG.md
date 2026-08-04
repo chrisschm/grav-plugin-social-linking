@@ -1,3 +1,27 @@
+# v0.5.2
+## 08/04/2026
+
+1. [](#security)
+    * fixed SSRF vulnerability: outgoing HTTP requests (API calls in `MastodonProvider` *and*
+      media downloads in `MediaCache`) previously followed the `url` shortcode parameter and any
+      URL returned by a remote instance's API response without validation - a crafted URL/redirect
+      could reach internal addresses (loopback, private ranges, link-local/cloud metadata such as
+      169.254.169.254, ...)
+    * new `classes/Http/SsrfGuard.php`: validates scheme (http/https only) and resolves+checks the
+      target IP (IPv4 and IPv6) against private/loopback/link-local/reserved ranges before every
+      connection
+    * `SimpleHttpClient` no longer follows redirects automatically; each redirect target is
+      re-validated through the guard before being followed, and the validated IP is pinned via
+      `CURLOPT_RESOLVE` to mitigate DNS-rebinding
+    * new opt-in config `allowed_private_hosts` (YAML-only, empty by default) for site owners who
+      deliberately want to embed a private/internal instance
+2. [](#bugfix)
+    * `composer.json` incorrectly declared `php: >=7.4.0` even though the code has used PHP 8.0
+      syntax (constructor property promotion, `match`, `str_starts_with()`) since early on -
+      corrected to `>=8.0.0`, matching the actual minimum. README/CONTRIBUTING.md now distinguish
+      that PHP 8.0+ floor from the currently tested/supported PHP 8.3/8.5 (the version the test
+      environment happens to run), instead of stating 8.3 as if the code required it.
+
 # v0.5.1
 ## 08/02/2026
 

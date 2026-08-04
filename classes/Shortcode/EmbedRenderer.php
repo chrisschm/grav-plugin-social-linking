@@ -3,6 +3,7 @@
 namespace Grav\Plugin\SocialLinking\Shortcode;
 
 use Grav\Common\Grav;
+use Grav\Plugin\SocialLinking\Http\SimpleHttpClient;
 use Grav\Plugin\SocialLinking\Provider\ProviderRegistry;
 use Grav\Plugin\SocialLinking\Storage\EmbedStorage;
 use Grav\Plugin\SocialLinking\Storage\MediaCache;
@@ -38,10 +39,23 @@ class EmbedRenderer
 {
     private const TIMELINE_TYPES = ['timeline'];
 
+    private SimpleHttpClient $mediaHttp;
+
     public function __construct(
         private ProviderRegistry $providers,
         private array $config
     ) {
+        // Eigener HTTP-Client für Medien-Downloads (Avatar, Anhänge,
+        // Card-Bild): dieselben Timeout-/SSRF-Einstellungen wie für die
+        // API-Requests der Provider, siehe SimpleHttpClient/SsrfGuard.
+        // Wichtig: Diese URLs kommen aus der Antwort der abgefragten
+        // Instanz, nicht vom Redakteur - der Schutz muss hier genauso
+        // greifen wie bei den Provider-Requests.
+        $this->mediaHttp = new SimpleHttpClient(
+            (int) ($this->config['timeout'] ?? 10),
+            'Grav-SocialLinking/1.0 (+https://github.com/)',
+            (array) ($this->config['allowed_private_hosts'] ?? [])
+        );
     }
 
     public function render(array $params): string
@@ -107,7 +121,7 @@ class EmbedRenderer
                 return $this->renderTemplate($type, $cached);
             }
 
-            $data = MediaCache::localize($fresh, $storage, $key);
+            $data = MediaCache::localize($fresh, $storage, $key, $this->mediaHttp);
             $storage->save($key, $data);
         }
 

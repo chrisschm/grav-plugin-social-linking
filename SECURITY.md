@@ -34,9 +34,16 @@ This plugin fetches data and media from Mastodon-compatible instances (Mastodon,
 GoToSocial) via their public Client API, caches it locally per page, and renders it through Twig
 templates. Reports particularly welcome around:
 
-- **Server-side request forgery (SSRF):** handling of the `url`/instance parameter passed to
-  `[social-embed]` / `social_embed()`, and how it's resolved into outgoing requests in
-  `classes/Provider/MastodonProvider.php` and `classes/Http/SimpleHttpClient.php`.
+- **Server-side request forgery (SSRF):** all outgoing HTTP requests — both the `url`/instance
+  parameter passed to `[social-embed]` / `social_embed()` *and* media URLs (avatar, attachments,
+  card image) returned by the queried instance's API response — are validated against
+  `classes/Http/SsrfGuard.php` before every connection, including redirect targets, which are
+  followed manually rather than automatically so each hop is re-checked. By default, requests to
+  private/loopback/link-local/reserved IP ranges (IPv4 and IPv6) and to `localhost` are rejected;
+  site owners can opt a specific internal host in via `allowed_private_hosts` in
+  `social-linking.yaml` (off by default, YAML-only, documented as a trust decision). Reports of
+  ways to bypass this guard (DNS-rebinding, redirect chains, host-parsing edge cases, IPv6
+  literal handling, etc.) are very welcome.
 - **Unsafe handling of remote content when rendered in templates** — e.g. XSS via a crafted
   display name, `spoiler_text`, or post content coming back from a (potentially malicious or
   compromised) remote instance and rendered in `templates/partials/social-linking/*.html.twig`.
@@ -70,7 +77,7 @@ Solo-Projekt ohne dediziertes Security-Team handelt, bitte etwas Zeit für einen
 bevor öffentlich darüber gesprochen wird — ich melde mich zeitnah zurück und stimme einen
 Offenlegungszeitpunkt mit dir ab.
 
-**Besonders relevant:** SSRF über den `url`-Parameter, unsichere Ausgabe von Fremdinhalten
-(XSS über Anzeigename/Spoiler-Text/Beitragstext), Datei-Handling beim Medien-Download, Umgang mit
-optionalen Access-Tokens sowie alles, was den Content-Warning-/Sensible-Medien-Schutz aushebeln
-könnte.
+**Besonders relevant:** Umgehungsversuche der SSRF-Absicherung (`SsrfGuard`, gilt für API-Aufrufe
+UND Medien-Downloads), unsichere Ausgabe von Fremdinhalten (XSS über Anzeigename/Spoiler-Text/
+Beitragstext), Datei-Handling beim Medien-Download, Umgang mit optionalen Access-Tokens sowie
+alles, was den Content-Warning-/Sensible-Medien-Schutz aushebeln könnte.

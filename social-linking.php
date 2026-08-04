@@ -80,7 +80,11 @@ class SocialLinkingPlugin extends Plugin
     {
         $config = (array) $this->config->get('plugins.social-linking');
 
-        $http = new SimpleHttpClient((int) ($config['timeout'] ?? 10));
+        $http = new SimpleHttpClient(
+            (int) ($config['timeout'] ?? 10),
+            'Grav-SocialLinking/1.0 (+https://github.com/)',
+            (array) ($config['allowed_private_hosts'] ?? [])
+        );
         $providers = new ProviderRegistry();
         $providers->add(new MastodonProvider($http, (array) ($config['tokens'] ?? [])));
 

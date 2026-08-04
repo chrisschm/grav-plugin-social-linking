@@ -13,3 +13,20 @@ timeout: 10
 # höhere Rate-Limits. Leer lassen, wenn nicht benötigt.
 # tokens:
 #   norden.social: 'dein-access-token'
+
+# SSRF-Schutz: Alle vom Plugin ausgehenden HTTP-Anfragen (API-Aufrufe UND
+# das Herunterladen von Medien wie Avataren/Anhängen/Card-Bildern) werden
+# standardmäßig geprüft und abgelehnt, falls das Ziel auf eine private,
+# lokale oder sonst reservierte Adresse zeigt (z. B. 127.0.0.1, 10.0.0.0/8,
+# 169.254.169.254 - Cloud-Metadaten, ::1, ...). Das gilt unabhängig davon,
+# ob die Adresse aus dem "url"-Parameter eines Redakteurs stammt oder aus
+# der API-Antwort einer (ggf. böswilligen/kompromittierten) Mastodon-
+# Instanz selbst.
+#
+# ACHTUNG: Wer hier einen Host einträgt, macht ihn für den Server explizit
+# erreichbar - auch wenn er in einem privaten/internen Netz liegt. Nur
+# eintragen, wem man vertraut bzw. was bewusst intern erreichbar sein soll
+# (z. B. eine eigene Mastodon-Instanz im Firmennetz). Kein Admin-
+# Formularfeld, bewusst nur direkt in dieser Datei editierbar.
+# allowed_private_hosts:
+#   - 'mastodon.internal.example'

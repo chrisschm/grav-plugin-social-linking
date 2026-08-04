@@ -1,7 +1,7 @@
 name: Social Linking
 slug: social-linking
 type: plugin
-version: 0.5.1
+version: 0.5.2
 description: Bindet Beiträge (und später Profile/Timelines) von Mastodon und kompatiblen Diensten als lokal zwischengespeicherte, themefähige Links/Embeds ein.
 icon: retweet
 dependencies:
@@ -52,3 +52,8 @@ form:
       type: display
       markdown: true
       content: PLUGIN_SOCIAL_LINKING.TOKENS_HINT
+
+    allowed_private_hosts_hint:
+      type: display
+      markdown: true
+      content: PLUGIN_SOCIAL_LINKING.ALLOWED_PRIVATE_HOSTS_HINT
