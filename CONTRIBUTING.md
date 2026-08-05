@@ -40,9 +40,26 @@ register the new provider in `social-linking.php`, and add matching templates un
 `templates/partials/social-linking/<service>-<type>.html.twig`. Storage, media caching, and rendering
 don't need to be touched. See the docblock in `ProviderInterface.php` for details.
 
+## Translations
+
+Source strings live in `languages/en.yaml` (English is the base language). Translations into other
+languages are handled through [Codeberg Translate](https://translate.codeberg.org/engage/grav-plugin-social-linking/)
+(Weblate) — please don't submit PRs that only change `languages/de.yaml` or any other non-English
+language file; contribute those via Codeberg Translate instead, in the browser, no Git/code
+knowledge required.
+
+Weblate pulls source strings from `main` and opens its own pull requests against `develop`, so
+there's no collision with regular code PRs targeting `main`.
+
+If your code change introduces new user-facing text (a new template label, a new error message,
+etc.), add the new key(s) directly to `languages/en.yaml` as part of your PR — Weblate picks up new
+keys automatically once merged, no further action needed from you.
+
 ## Before opening a pull request
 
-1. **Target branch:** please branch from and target `main`.
+1. **Target branch:** please branch from and target `main`. (`develop` receives Weblate's automated
+   translation pull requests and isn't part of the regular contribution workflow — you don't need to
+   worry about it.)
 2. **PHP version:** the plugin supports PHP >= 8.0 (see `composer.json`; README documents PHP 8.3/8.5 as
    the tested/supported floor). Please avoid syntax or functions that require a newer PHP version unless
    you also raise the requirement in `composer.json` and README *and* discuss it in an issue first — this
@@ -108,8 +125,17 @@ die daran rütteln würden, bitte vorher ein Issue eröffnen.
 registrieren, passende Templates unter `templates/partials/social-linking/<service>-<type>.html.twig`
 ergänzen — Speicherung, Medien-Cache und Rendering müssen dafür nicht angefasst werden.
 
+**Übersetzungen:** Die Quelltexte liegen in `languages/en.yaml` (Englisch ist Basissprache).
+Übersetzungen in andere Sprachen bitte über [Codeberg Translate](https://translate.codeberg.org/engage/grav-plugin-social-linking/)
+einreichen (Weblate), nicht per PR direkt an `languages/de.yaml` o. ä. Weblate holt die Quelltexte aus
+`main` und öffnet eigene PRs gegen `develop`, dadurch entstehen keine Kollisionen mit regulären
+Code-PRs. Führt eine Code-Änderung neue, bisher nicht vorhandene Texte ein (neues Label, neue
+Fehlermeldung), den entsprechenden Key bitte direkt mit in `languages/en.yaml` ergänzen — Weblate
+übernimmt neue Keys danach automatisch.
+
 **Vor einem Pull Request:**
-- Ziel-Branch ist immer `main`.
+- Ziel-Branch ist immer `main` (`develop` nimmt nur die automatisierten Weblate-Übersetzungs-PRs
+  entgegen, damit müsst ihr euch als Contributor nicht befassen).
 - Unterstützt wird PHP >= 8.0 (siehe `composer.json`; README nennt PHP 8.3/8.5 als getestete/
   unterstützte Untergrenze). Neuere PHP-Syntax bitte nur nach Rücksprache in einem Issue verwenden.
 - Es gibt aktuell **keinen automatisierten Lint/Test-Schritt** in der CI. Bitte selbst `php -l` auf

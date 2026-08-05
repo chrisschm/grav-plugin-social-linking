@@ -1,5 +1,7 @@
 # Social Linking (Grav-Plugin)
 
+[![Translation status](https://translate.codeberg.org/widget/grav-plugin-social-linking/svg-badge.svg)](https://translate.codeberg.org/engage/grav-plugin-social-linking/)
+
 Bindet Beiträge von Mastodon (und jedem Dienst mit Mastodon-kompatibler
 Client-API, z. B. Pleroma, Akkoma, GoToSocial) direkt in Grav-Seiten ein.
 Die nötigen Daten werden **einmalig über die API gelesen und danach als
@@ -258,6 +260,12 @@ sich per PHPUnit/eigenem Test-Harness auch ganz ohne Grav-Bootstrap testen
 lässt; eine Kopplung an `$grav['language']` hätte das verhindert. Diese
 Meldungen tauchen ohnehin nur bei fehlerhaften Aufrufen auf (z. B. eine URL,
 die keinem der unterstützten Muster entspricht), nicht im normalen Betrieb.
+
+### Übersetzung
+
+Die Komponenten können über [Codeberg Translate](https://translate.codeberg.org/engage/grav-plugin-social-linking/)
+in weitere Sprachen übersetzt werden – direkt im Browser, ohne Git- oder Code-Kenntnisse.
+Aktuell verfügbar: Deutsch und Englisch.
 
 ## Konfiguration
 
