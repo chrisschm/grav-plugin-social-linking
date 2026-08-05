@@ -23,7 +23,14 @@ jobs:
           cat changed.txt
 
       - name: PHP-Syntax prüfen
-        run: grep -E '\.php$' changed.txt | xargs -r -n1 php -l
+        run: |
+          # Prüfen, ob PHP-Dateien in der Liste sind
+          PHP_FILES=$(grep -E '\.php$' changed.txt || true)
+          if [ -z "$PHP_FILES" ]; then
+            echo "Keine PHP-Dateien geändert. Überspringe Syntax-Prüfung."
+            exit 0
+          fi
+          echo "$PHP_FILES" | xargs -r -n1 php -l
 
   syntax-twig:
     if: github.server_url != 'https://github.com'
