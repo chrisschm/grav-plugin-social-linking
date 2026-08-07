@@ -267,6 +267,30 @@ Die Komponenten können über [Codeberg Translate](https://translate.codeberg.or
 in weitere Sprachen übersetzt werden – direkt im Browser, ohne Git- oder Code-Kenntnisse.
 Aktuell verfügbar: Deutsch und Englisch.
 
+#### Für Maintainer: der `translate`-Branch
+
+Codeberg Translate ist als Repository-Branch **nicht** an `main`, sondern an einen eigenen
+Branch `translate` angebunden. Damit landen automatisch erzeugte Commits/Pull-Requests von
+Weblate (z.B. beim Anlegen einer neuen, zunächst leeren Sprachdatei durch eine anfragende
+Person) ausschließlich dort und nie direkt gegen `main`. Sie können dort folgenlos liegen
+bleiben oder geschlossen werden.
+
+Daraus folgt zweierlei, das bewusst manuell gehandhabt wird (kein automatischer Merge):
+
+- **`main` → `translate`:** Ändert sich `languages/en.yaml` oder `languages/de.yaml` in `main`
+  (neue Textbausteine, umbenannte Keys), muss das manuell nach `translate` nachgezogen werden
+  (Datei kopieren, committen, pushen) – sonst übersetzen Personen irgendwann gegen einen
+  veralteten Stand der Quelltexte.
+- **`translate` → `main`:** Nur vollständig/ausreichend übersetzte Sprachdateien werden bei
+  Bedarf einzeln von `translate` nach `main` übernommen (Datei kopieren, committen, pushen),
+  nicht der Branch als Ganzes. **Wichtig vorher:** In Codeberg Translate unter
+  *Repository-Wartung* → *„Commit pending changes“* auslösen (und kurz warten/aktualisieren),
+  bevor die Datei kopiert wird – sonst fehlen ggf. die letzten, im Browser bereits gespeicherten
+  Übersetzungen, die von Weblate noch nicht in einen Git-Commit übernommen wurden.
+
+Der `translate`-Branch wird absichtlich nie per `git merge`/Pull-Request als Ganzes nach `main`
+zusammengeführt und divergiert dauerhaft.
+
 ## Konfiguration
 
 Über *Admin → Plugins → Social Linking* bzw. `user/config/plugins/social-linking.yaml`:

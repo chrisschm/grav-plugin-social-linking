@@ -42,18 +42,22 @@ don't need to be touched. See the docblock in `ProviderInterface.php` for detail
 
 ## Translations
 
-Source strings live in `languages/en.yaml` (English is the base language). Translations into other
-languages are handled through [Codeberg Translate](https://translate.codeberg.org/engage/grav-plugin-social-linking/)
-(Weblate) — please don't submit PRs that only change `languages/de.yaml` or any other non-English
-language file; contribute those via Codeberg Translate instead, in the browser, no Git/code
-knowledge required.
+Admin panel translations are managed via [Codeberg Translate](https://translate.codeberg.org/engage/grav-plugin-social-linking/)
+(a hosted Weblate instance), **not** through regular pull requests. If you'd like to add or
+improve a translation, please use that web interface instead of editing `languages/*.yaml`
+directly.
 
-Weblate pulls source strings from `main` and opens its own pull requests against `develop`, so
-there's no collision with regular code PRs targeting `main`.
+- Weblate pushes translation changes to a dedicated `translate` branch, not `main`. Maintainers
+  periodically bring finished/sufficiently complete language files over to `main` by hand — as a
+  translator you don't need to open a pull request or worry about branches yourself.
 
-If your code change introduces new user-facing text (a new template label, a new error message,
-etc.), add the new key(s) directly to `languages/en.yaml` as part of your PR — Weblate picks up new
-keys automatically once merged, no further action needed from you.
+- The source/base language is `languages/en.yaml`. If you're adding a *new* translatable string
+  (not just translating an existing one), it needs to be added there first as part of a regular
+  code PR — only then does it show up in Weblate for translators to pick up.
+- The top-level `name`/`description` fields in `blueprints.yaml` are intentionally **not** part
+  of this translation setup (see `docs/ARCHITECTURE.md` for why) and stay as plain German text.
+
+[![Translation status](https://translate.codeberg.org/widget/grav-plugin-social-linking/svg-badge.svg)](https://translate.codeberg.org/engage/grav-plugin-social-linking/)
 
 ## Before opening a pull request
 
