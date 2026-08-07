@@ -5,6 +5,14 @@ on:
    branches:
       - develop
   pull_request:
+    branches:
+      - main
+      - develop
+    # Absichtlich nur main/develop gelistet: PRs mit Zielbranch "translate"
+    # (Codeberg Translate, siehe Uebersetzungs-Setup im README) loesen den
+    # Job dadurch nicht aus. Dort aendern sich ohnehin nur languages/*.yaml,
+    # nie PHP/JS/Twig - der Lint-Job wuerde dort nichts pruefen, aber
+    # unnoetig Runner-Minuten verbrauchen.
 
 jobs:
   syntax-php:
