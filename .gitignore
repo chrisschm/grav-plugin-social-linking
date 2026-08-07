@@ -1,0 +1,35 @@
+# Betriebssystem-eigene Dateien
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editoren / IDEs
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Editor-Backup-/Swap-Dateien
+*~
+*.swp
+*.swo
+
+# PHP / Composer
+/vendor/
+composer.phar
+.php-cs-fixer.cache
+.phpunit.result.cache
+
+# Node (falls künftig Tooling für CSS/JS dazukommt)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Logs
+*.log
+
+# Lokale Umgebungsvariablen / Secrets
+.env
+.env.local
