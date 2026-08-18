@@ -192,23 +192,30 @@ that. Affects only edge-case errors, not normal operation.
 ### Translation workflow (Codeberg Translate / Weblate)
 
 Community translations go through **Codeberg Translate** (a hosted Weblate instance), connected
-to a dedicated `translate` branch — the same pattern as the sister project `feedteasers`. There is
-deliberately **no `git merge`** between `translate` and `main` in either direction; instead, new or
-changed `languages/*.yaml` files are synced manually, file by file, whichever direction is current
-(upstream changes copied into `translate` for translators to work from, finished translations
-copied back into `main`). Merging the branches directly was avoided because `translate`'s history
-diverges quickly (every saved string is its own commit) and a merge would pull that noise into
-`main`.
+to a dedicated `translate` branch — the same pattern as the sister project `feedteasers`. Three
+branches are involved: `develop` (integration branch for ongoing work), `main` (release branch),
+and `translate` (the branch Weblate reads from/writes to). `develop` is merged into **both** `main`
+and `translate` with regular `git merge` — order doesn't matter, and this still works cleanly even
+when a change is committed directly to `main` instead. `translate` and `main` are never merged
+directly with each other in either direction, though — both flows in and out of `translate` go
+through Weblate/PR instead of a bare merge command (see below), specifically to keep `translate`'s
+own commit noise (every saved string is its own commit) out of `main`'s history.
 
-The "commit and push at the same time" option is enabled in the Codeberg Translate component
-settings for this project, so a translator's change opens a PR against `translate` automatically
-rather than only being visible inside Weblate's own database.
+Weblate works against its own clone of the repository: it commits and merges translation changes
+there, and from that clone it always opens a Pull Request against `translate` in Codeberg — it
+never pushes directly to `translate`. This is enabled via the "commit and push at the same time"
+option in the Codeberg Translate component settings for this project.
+
+Bringing a finished translation back out of `translate` into `main`/`develop` also always goes
+through a regular, reviewed Pull Request — never a direct merge command, so there is always a
+review point before translation strings land back in the branches used for releases.
 
 `.forgejo/workflows/lint.yml` explicitly lists only `main` and `develop` as `pull_request` target
 branches (not `translate`) — see the comment in the file itself. Weblate-generated PRs always
 target `translate` and only ever touch `languages/*.yaml`, never PHP/JS/Twig, so the syntax-check
 job has nothing to check there; excluding `translate` avoids burning CI minutes on every saved
-translation string.
+translation string. PRs that bring a finished translation back into `main`/`develop` **do** target
+one of those two branches and therefore do run through the lint job, same as any other PR.
 
 Languages currently shipped: `de`, `en` (source language), and `et` (Estonian, added via this
 workflow, 100 % coverage, manually QA'd against `en.yaml` for missing/extra placeholders and
@@ -280,8 +287,12 @@ hinaus, aktuell ist nur `MastodonProvider` implementiert. Die beiden v0.5.0-Regr
 Hotfix v0.5.1 behoben — Details siehe Abschnitt „Notable past bugs" oben bzw. `CHANGELOG.md`.
 
 Community-Übersetzungen laufen über Codeberg Translate (Weblate) an einen eigenen `translate`-
-Branch, analog zu `feedteasers` — bewusst ohne `git merge` zwischen `translate` und `main`,
-stattdessen dateibasierter Sync von `languages/*.yaml` in beide Richtungen. Der CI-Workflow
-`.forgejo/workflows/lint.yml` schließt `translate` als PR-Zielbranch bewusst aus, da dort ohnehin
-nur Sprachdateien geändert werden. Aktuell verfügbare Sprachen: `de`, `en` (Quellsprache), `et`
-(Estnisch).
+Branch, analog zu `feedteasers`. `develop` wird per normalem `git merge` sowohl in `main` als auch
+in `translate` übernommen (Reihenfolge egal); `translate` und `main` werden aber nie direkt
+miteinander gemerged — Weblate arbeitet in einem eigenen Klon und eröffnet von dort immer einen
+Pull Request gegen `translate`, und auch der Rückweg fertiger Übersetzungen nach `main`/`develop`
+läuft immer über einen regulären, review-pflichtigen Pull Request statt eines direkten Merges. Der
+CI-Workflow `.forgejo/workflows/lint.yml` schließt `translate` als PR-Zielbranch bewusst aus, da
+dort ohnehin nur Sprachdateien geändert werden — PRs, die Übersetzungen zurück nach `main`/`develop`
+bringen, durchlaufen den Lint-Job dagegen normal. Aktuell verfügbare Sprachen: `de`, `en`
+(Quellsprache), `et` (Estnisch).
