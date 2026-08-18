@@ -1,11 +1,24 @@
+# v0.5.4
+## unreleased
+
+1. [](#bugfix)
+    * `limit` parameter (`type="timeline"`) incorrectly defaulted to `5` in code, while the
+      docblock comment in `EmbedRenderer.php` and the README parameter table already documented
+      `10` - the actual default in code never got updated when instance timelines were added and
+      the documented default was raised. Code now matches the documented value.
+2. [](#improved)
+    * Release tags are now bare semantic versions (`0.5.3`) instead of `v
+	-prefixed, matching Grav's GPM convention for version sorting and
+	`releases/latest`
+
 # v0.5.3
-## 08/09/2026
+## 08/09/2026 ([cab1586](https://codeberg.org/chschmidt/grav-plugin-social-linking/commit/cab15864562d98472848d89ea1ab9dfb1a3ef3f3))
 
 1. [](#new)
     * Estonian language file added
 
 # v0.5.2
-## 08/04/2026
+## 08/04/2026 ([54c3e6d](https://codeberg.org/chschmidt/grav-plugin-social-linking/commit/54c3e6d86fe75a2ba13f6b3133ed0b1979fcabc4))
 
 1. [](#security)
     * fixed SSRF vulnerability: outgoing HTTP requests (API calls in `MastodonProvider` *and*
@@ -29,14 +42,14 @@
       environment happens to run), instead of stating 8.3 as if the code required it.
 
 # v0.5.1
-## 08/02/2026
+## 08/02/2026 ([ad3b782](https://codeberg.org/chschmidt/grav-plugin-social-linking/commit/ad3b782be5252ee16edd944ef5f554639d15c2e1))
 
 1. [](#bugfix)
     * v0.5.0 shipped language files and a translated admin form, but the actual `|t`/`|tl` calls in the templates and in `EmbedRenderer` were still missing - i18n now actually applies everywhere
     * removed an accidental duplicated copy of large parts of the plugin nested under `classes/`
 
 # v0.5.0
-## 08/01/2026
+## 08/01/2026 ([f848e22](https://codeberg.org/chschmidt/grav-plugin-social-linking/commit/f848e22248cf78241d7b1f95f5bfbb535d3998b6))
 
 1. [](#new)
     * internationalization: all user-facing strings now go through Grav's language system (`languages/de.yaml`, `languages/en.yaml`, `PLUGIN_SOCIAL_LINKING.*`) - covers rendered templates, `EmbedRenderer` error messages, and the admin config form labels/help in `blueprints.yaml`
