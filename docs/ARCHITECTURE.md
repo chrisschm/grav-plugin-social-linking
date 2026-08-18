@@ -189,6 +189,32 @@ unparseable URL). The class is deliberately kept independent of a running Grav i
 be unit-tested without a Grav bootstrap — coupling it to `$grav['language']` would have prevented
 that. Affects only edge-case errors, not normal operation.
 
+### Translation workflow (Codeberg Translate / Weblate)
+
+Community translations go through **Codeberg Translate** (a hosted Weblate instance), connected
+to a dedicated `translate` branch — the same pattern as the sister project `feedteasers`. There is
+deliberately **no `git merge`** between `translate` and `main` in either direction; instead, new or
+changed `languages/*.yaml` files are synced manually, file by file, whichever direction is current
+(upstream changes copied into `translate` for translators to work from, finished translations
+copied back into `main`). Merging the branches directly was avoided because `translate`'s history
+diverges quickly (every saved string is its own commit) and a merge would pull that noise into
+`main`.
+
+The "commit and push at the same time" option is enabled in the Codeberg Translate component
+settings for this project, so a translator's change opens a PR against `translate` automatically
+rather than only being visible inside Weblate's own database.
+
+`.forgejo/workflows/lint.yml` explicitly lists only `main` and `develop` as `pull_request` target
+branches (not `translate`) — see the comment in the file itself. Weblate-generated PRs always
+target `translate` and only ever touch `languages/*.yaml`, never PHP/JS/Twig, so the syntax-check
+job has nothing to check there; excluding `translate` avoids burning CI minutes on every saved
+translation string.
+
+Languages currently shipped: `de`, `en` (source language), and `et` (Estonian, added via this
+workflow, 100 % coverage, manually QA'd against `en.yaml` for missing/extra placeholders and
+untranslated leftovers before merging). Adding a new language does not require a code change — it
+is entirely a Codeberg Translate / `languages/*.yaml` matter.
+
 ## Notable past bugs (useful context before touching related code)
 
 1. **`blueprints.yaml` alone isn't enough.** Despite official docs suggesting otherwise, the
@@ -220,12 +246,11 @@ that. Affects only edge-case errors, not normal operation.
    Functionally harmless (never loaded by Grav), but unnecessary bulk in the public release. Both
    regressions (4+5) were fixed in hotfix release **v0.5.1**.
 
-## Live status (at time of writing)
+## Live status
 
-Version 0.5.1 is live on the official Grav GPM. See `CHANGELOG.md` for the current released
-version and `README.md` for user-facing configuration docs. This file describes architecture and
-rationale, not release status — please keep it in sync when the design changes, but don't
-duplicate version numbers here.
+See `CHANGELOG.md` for the current released version and `README.md` for user-facing configuration
+docs. This file describes architecture and rationale, not release status — please keep it in sync
+when the design changes, but don't duplicate version numbers here.
 
 ---
 
@@ -253,3 +278,10 @@ Provider-Architektur (`ProviderInterface`) ist vorbereitet für weitere Dienste 
 hinaus, aktuell ist nur `MastodonProvider` implementiert. Die beiden v0.5.0-Regressionen
 (unvollständig ausgeliefertes i18n, verschachtelte Verzeichnis-Dopplung unter `classes/`) sind mit
 Hotfix v0.5.1 behoben — Details siehe Abschnitt „Notable past bugs" oben bzw. `CHANGELOG.md`.
+
+Community-Übersetzungen laufen über Codeberg Translate (Weblate) an einen eigenen `translate`-
+Branch, analog zu `feedteasers` — bewusst ohne `git merge` zwischen `translate` und `main`,
+stattdessen dateibasierter Sync von `languages/*.yaml` in beide Richtungen. Der CI-Workflow
+`.forgejo/workflows/lint.yml` schließt `translate` als PR-Zielbranch bewusst aus, da dort ohnehin
+nur Sprachdateien geändert werden. Aktuell verfügbare Sprachen: `de`, `en` (Quellsprache), `et`
+(Estnisch).
