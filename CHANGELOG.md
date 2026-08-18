@@ -7,9 +7,8 @@
       `10` - the actual default in code never got updated when instance timelines were added and
       the documented default was raised. Code now matches the documented value.
 2. [](#improved)
-    * Release tags are now bare semantic versions (`0.5.3`) instead of `v
-	-prefixed, matching Grav's GPM convention for version sorting and
-	`releases/latest`
+    * Release tags are now bare semantic versions (`0.5.3`) instead of `v`-prefixed, matching
+      Grav's GPM convention for version sorting and `releases/latest`
 
 # v0.5.3
 ## 08/09/2026 ([cab1586](https://codeberg.org/chschmidt/grav-plugin-social-linking/commit/cab15864562d98472848d89ea1ab9dfb1a3ef3f3))
