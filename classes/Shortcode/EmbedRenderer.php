@@ -68,7 +68,7 @@ class EmbedRenderer
         $url     = trim((string) ($params['url'] ?? ''));
         $refresh = $this->toBool($params['refresh'] ?? false);
         $delete  = $this->toBool($params['delete'] ?? false);
-        $limit   = (int) ($params['limit'] ?? 5);
+        $limit   = (int) ($params['limit'] ?? 10);
 
         if ($url === '') {
             return $this->renderError('PLUGIN_SOCIAL_LINKING.ERROR_NO_URL');
