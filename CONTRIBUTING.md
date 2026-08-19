@@ -95,8 +95,10 @@ directly.
   keys in `languages/*.yaml`)
 - `templates/partials/social-linking/<service>-<type>.html.twig` — output templates per provider and type
 
-See the plugin's own README for the full list of configuration options and the data schema returned by
-providers.
+See [`docs/README.md`](docs/README.md) for the full contributor documentation index (architecture,
+design decisions, security policy, code of conduct). For the end-user configuration reference and
+the data schema returned by providers, see the
+[Wiki](https://codeberg.org/chschmidt/grav-plugin-social-linking/wiki).
 
 ## Release process (for context, maintainer-only)
 
