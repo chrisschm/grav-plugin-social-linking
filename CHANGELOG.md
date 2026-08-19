@@ -54,7 +54,7 @@
     * internationalization: all user-facing strings now go through Grav's language system (`languages/de.yaml`, `languages/en.yaml`, `PLUGIN_SOCIAL_LINKING.*`) - covers rendered templates, `EmbedRenderer` error messages, and the admin config form labels/help in `blueprints.yaml`
 
 # v0.4.0
-## 08/01/2026
+## 08/01/2026 ([4da5079](https://codeberg.org/chschmidt/grav-plugin-social-linking/commit/4da50799b3d50c5c75437a184ede5414fe5100a3))
 
 1. [](#new)
     * sensitive media (`sensitive: true`) is now blurred by default with a click-to-reveal overlay, pure CSS/no JS
@@ -64,7 +64,7 @@
     * renamed `type="public_timeline"` (introduced in v0.3.0) to `type="timeline"` - now unambiguous since the single-account type above is gone. **Existing `[social-embed type="public_timeline" ...]` calls must be updated to `type="timeline"`.**
 
 # v0.3.0
-## 07/31/2026
+## 07/31/2026 ([fd747df](https://codeberg.org/chschmidt/grav-plugin-social-linking/commit/fd747df606fb468441dfe97013779e5fe8e77040))
 
 1. [](#new)
     * profile type: follower/following/status counts, bio, joined date, custom profile fields (with verified badge) added
@@ -74,7 +74,7 @@
     * README: reinstated blueprints.yaml/`<slug>.yaml` requirement note and PHP >= 8.3 requirement that were lost during manual consolidation
 
 # v0.2.0
-## 07/31/2026
+## 07/31/2026 ([5f22861](https://codeberg.org/chschmidt/grav-plugin-social-linking/commit/5f22861510b6c63b6338de6010c11e0bcab78b54))
 
 1. [](#new)
     * config default values added
@@ -84,7 +84,7 @@
     * image path not found fixed
 
 # v0.1.0
-## 07/31/2026
+## 07/31/2026 ([d2e232c](https://codeberg.org/chschmidt/grav-plugin-social-linking/commit/d2e232ce1ac46cb432810378e5ff75d795c9a2df))
 
 1. [](#new)
     * Initial Release
