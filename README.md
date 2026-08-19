@@ -1,6 +1,8 @@
 # Social Linking Plugin for Grav CMS
 
-[![Translation status](https://translate.codeberg.org/widget/grav-plugin-social-linking/svg-badge.svg)](https://translate.codeberg.org/engage/grav-plugin-social-linking/)
+[![Latest Release](https://img.shields.io/gitea/v/release/chschmidt/grav-plugin-social-linking?gitea_url=https%3A%2F%2Fcodeberg.org%2F&display_name=release)](https://codeberg.org/chschmidt/grav-plugin-social-linking/releases) 
+[![MIT-Lizenz](https://img.shields.io/badge/License-MIT-blue.svg)](https://de.wikipedia.org/wiki/MIT-Lizenz) 
+[![Translation status](https://translate.codeberg.org/widget/grav-plugin-social-linking/svg-badge.svg)](https://translate.codeberg.org/engage/grav-plugin-social-linking/)  
 
 **Social Linking** embeds posts, profiles, and instance-wide live feeds from Mastodon — and any
 service with a Mastodon-compatible Client API, e.g. Pleroma, Akkoma, GoToSocial — directly into
