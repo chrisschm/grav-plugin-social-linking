@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE martif PUBLIC "ISO 12200:1999A//DTD MARTIF core (DXFcdV04)//EN" "TBXcdv04.dtd">
-<martif type="TBX">
+<martif type="TBX" xml:lang="en">
     <martifHeader>
         <fileDesc>
             <sourceDesc>
@@ -10,6 +10,21 @@
     </martifHeader>
     <text>
         <body>
+            <termEntry>
+                <langSet xml:lang="en"><tig><term>%s</term></tig></langSet>
+                <langSet xml:lang="et"><tig><term></term></tig></langSet>
+                <descrip>Variable: Placeholders (%s) must not be translated.</descrip>
+            </termEntry>
+            <termEntry>
+                <langSet xml:lang="en"><tig><term>SSRF</term></tig></langSet>
+                <langSet xml:lang="et"><tig><term></term></tig></langSet>
+                <descrip>Technical term: Server-Side Request Forgery. Keep as "SSRF" in all languages — do not translate. Refers to the plugin's built-in protection against requests to internal/private network addresses, explained in the ALLOWED_PRIVATE_HOSTS_HINT help text.</descrip>
+            </termEntry>
+            <termEntry>
+                <langSet xml:lang="en"><tig><term>user/config/plugins/social-linking.yaml</term></tig></langSet>
+                <langSet xml:lang="et"><tig><term></term></tig></langSet>
+                <descrip>Path: File paths are not translated.</descrip>
+            </termEntry>
         </body>
     </text>
 </martif>
