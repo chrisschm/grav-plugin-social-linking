@@ -11,18 +11,13 @@
     <text>
         <body>
             <termEntry>
-                <langSet xml:lang="en"><tig><term>%s</term></tig></langSet>
-                <langSet xml:lang="et"><tig><term></term></tig></langSet>
-                <descrip>Variable: Placeholders (%s) must not be translated.</descrip>
-            </termEntry>
-            <termEntry>
                 <langSet xml:lang="en"><tig><term>SSRF</term></tig></langSet>
-                <langSet xml:lang="et"><tig><term></term></tig></langSet>
+                <langSet xml:lang="et"><tig><term/></tig></langSet>
                 <descrip>Technical term: Server-Side Request Forgery. Keep as "SSRF" in all languages — do not translate. Refers to the plugin's built-in protection against requests to internal/private network addresses, explained in the ALLOWED_PRIVATE_HOSTS_HINT help text.</descrip>
             </termEntry>
             <termEntry>
                 <langSet xml:lang="en"><tig><term>user/config/plugins/social-linking.yaml</term></tig></langSet>
-                <langSet xml:lang="et"><tig><term></term></tig></langSet>
+                <langSet xml:lang="et"><tig><term/></tig></langSet>
                 <descrip>Path: File paths are not translated.</descrip>
             </termEntry>
         </body>
