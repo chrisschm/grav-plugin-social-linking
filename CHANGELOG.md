@@ -1,5 +1,5 @@
 # v0.5.4
-## 08/25/2026
+## 08/25/2026 ([7623a46](https://codeberg.org/chschmidt/grav-plugin-social-linking/commit/7623a46685fe41bb2f81884015793e3a51ba5987))
 
 1. [](#bugfix)
     * `limit` parameter (`type="timeline"`) incorrectly defaulted to `5` in code, while the
