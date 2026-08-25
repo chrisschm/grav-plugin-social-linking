@@ -1,0 +1,62 @@
+PLUGIN_SOCIAL_LINKING:
+  VIEW_ORIGINAL_TITLE: Vaata algset sisu teenuses %s
+  BOOSTED: hoogu antud
+  VIEW_ORIGINAL_ARIA: Vaata algset sisu
+  REPLIES_TITLE: Vastuseid
+  BOOSTS_TITLE: Hooandmisi
+  FAVOURITES_TITLE: Lemmikuks märkimisi
+  VIEW_ON_INSTANCE: Vaata teenuses %s ↗
+  SENSITIVE_MEDIA_DEFAULT: Meedium on märgitud delikaatseks
+  SHOW_MEDIA: Näita meediumi
+  EXPAND_HINT: (näita postitust)
+  LOCKED_ACCOUNT: Kaitstud kasutajakonto
+  BOT: Robotkonto
+  FOLLOWERS: Jälgijaid
+  FOLLOWING: Jälgitavaid
+  POSTS: Postitusi
+  JOINED: Liitumisaeg
+  VERIFIED: Kinnitatud
+  SCOPE_LOCAL: See server
+  SCOPE_REMOTE: Välised serverid
+  SCOPE_FEDERATED: Kõik serverid
+  LIVE_FEED_LABEL: Sisuvoog reaalajas · %s · %s
+  EMPTY_FEED: Selles sisuvoos pole hetkel postitusi.
+  ERROR_NO_URL: Ühtegi võrguaadressi ega kasutajatunnust polnud lisatud 
+    (parameeter „url“).
+  ERROR_UNKNOWN_TYPE: 'Tundmatu tüüp: „%s“.'
+  ERROR_UNKNOWN_SERVICE: 'Tundmatu teenus: „%s“.'
+  ERROR_URL_SERVICE_MISMATCH: „%s“ ei vasta teenusele „%s“.
+  ERROR_LOAD_FAILED: 'Postituse laadimine ei õnnestunud: %s'
+  STORAGE_SUBFOLDER: Andmeruumi kaust
+  TIMEOUT: API-päringu aegumine (sekundites)
+  STORAGE_SUBFOLDER_HELP: Igasse lehekausta loodud alamkausta nimi, kuhu 
+    salvestatakse töötlemata andmed ja kohalikku vahemällu salvestatud 
+    multimeediafailid.
+  ERROR_NO_PAGE_CONTEXT: Aktiivset lehekonteksti ei leidu - päring peab toimuma 
+    Gravi lehe seest.
+  TIMEOUT_HELP: Kui kaua tuleb oodata teenuse API vastust, enne kui päring 
+    katkestatakse ja kasutatakse olemasolevaid puhverdatud andmeid, kui need 
+    juhtumisi on olemas.
+  TOKENS_HINT: |
+    Enamus avalikke postitusi ei vaja tunnusloa lisamist. Mitteavaliku sisu puhul või
+    sagedasemate päringute lubamiseks võid seadistada serverikohase tunnusloa failis
+    `user/config/plugins/social-linking.yaml`:
+
+    ```yaml
+    tokens:
+      norden.social: 'sinu-tunnusluba'
+    ```
+  ALLOWED_PRIVATE_HOSTS_HINT: |
+    Turvalisuse tagamiseks (SSRF-kaitse) keeldub see lisamoodul vaikimisi päringutest
+    privaatses/kohalikus/sisevõrgus asuvatele aadressidele (nt 127.0.0.1,
+    10.0.0.0/8, 169.254.169.254, ::1), seda nii API-päringute kui allalaaditava meediumi jaoks.
+    Kui soovid teadlikult kasutada sisevõrgus olevat Mastodoni serverit, võid selle
+    selgesõnaliselt lubatud nimekirja lisada otse failis `user/config/plugins/social-linking.yaml`:
+
+    ```yaml
+    allowed_private_hosts:
+      - 'mastodon.internal.example'
+    ```
+
+    **Hoiatus:** kõik siin loetletud hostid muutuvad serverist kättesaadavaks, isegi kui need asuvad
+    sisevõrgus, seega lisa ainult neid hoste, mida usaldad.
