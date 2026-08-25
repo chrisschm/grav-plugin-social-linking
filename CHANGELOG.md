@@ -6,6 +6,17 @@
       docblock comment in `EmbedRenderer.php` and the README parameter table already documented
       `10` - the actual default in code never got updated when instance timelines were added and
       the documented default was raised. Code now matches the documented value.
+    * locally cached media (avatars, header images, attachments, link preview images) broke after
+      reordering subpages in the admin: `MediaCache` used to bake the page folder's full physical
+      path - including its sortable numeric prefix (e.g. `03.` in
+      `02.blog/03.my-post`) - into the stored JSON at the time the embed was first fetched. Grav
+      renames that prefix when pages are reordered, which left the persisted path pointing at a
+      folder that no longer existed, even though the media files themselves had moved along with
+      the (renamed) folder. `MediaCache::download()` now stores a relative reference instead
+      (`<key>/media/<file>`), and a new `MediaCache::resolve()` rebuilds the actual web path fresh
+      against the *current* page path on every render (`EmbedStorage::publicPathFor()`). This also
+      self-heals JSON entries that already went stale from an earlier reorder, without needing a
+      migration step.
 2. [](#improved)
     * Release tags are now bare semantic versions (`0.5.3`) instead of `v`-prefixed, matching
       Grav's GPM convention for version sorting and `releases/latest`

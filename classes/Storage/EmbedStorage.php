@@ -110,6 +110,23 @@ class EmbedStorage
         return $this->webBase . '/' . $key . '/media';
     }
 
+    /**
+     * Bildet einen relativen, im gespeicherten Datensatz abgelegten
+     * Medienverweis (z. B. "mastodon__profile__50c3.../media/e5a8...jpg",
+     * siehe MediaCache::download()) auf den *aktuellen* web-erreichbaren
+     * Pfad ab. Bewusst getrennt von mediaPublicPath(): Diese Methode wird
+     * bei JEDEM Rendern neu aufgerufen (siehe MediaCache::resolve()),
+     * mediaPublicPath() nur beim Download. Dadurch bleiben Bildpfade auch
+     * dann korrekt, wenn der Seitenordner nach dem ersten Abruf des Embeds
+     * umbenannt wurde (z. B. durch eine Neusortierung im Admin, die den
+     * numerischen Präfix des Seitenordners ändert) - ein fest im JSON
+     * gespeicherter absoluter Pfad würde das nicht überleben.
+     */
+    public function publicPathFor(string $relative): string
+    {
+        return $this->webBase . '/' . ltrim($relative, '/');
+    }
+
     /** @return string[] Liste aller vorhandenen Cache-Keys */
     public function list(): array
     {

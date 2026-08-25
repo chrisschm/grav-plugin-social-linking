@@ -118,14 +118,17 @@ class EmbedRenderer
                 if ($cached === null) {
                     return $this->renderError('PLUGIN_SOCIAL_LINKING.ERROR_LOAD_FAILED', [$e->getMessage()]);
                 }
-                return $this->renderTemplate($type, $cached);
+                return $this->renderTemplate($type, MediaCache::resolve($cached, $storage));
             }
 
             $data = MediaCache::localize($fresh, $storage, $key, $this->mediaHttp);
             $storage->save($key, $data);
         }
 
-        return $this->renderTemplate($type, $data);
+        // Medienverweise werden bei JEDEM Rendern frisch gegen den
+        // aktuellen Seitenordner-Pfad aufgelöst (nicht nur beim ersten
+        // Abruf) - siehe MediaCache::resolve() / EmbedStorage::publicPathFor().
+        return $this->renderTemplate($type, MediaCache::resolve($data, $storage));
     }
 
     /**
