@@ -1,5 +1,5 @@
 # v0.5.4
-## unreleased
+## 08/25/2026
 
 1. [](#bugfix)
     * `limit` parameter (`type="timeline"`) incorrectly defaulted to `5` in code, while the
