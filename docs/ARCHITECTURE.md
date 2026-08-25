@@ -94,9 +94,15 @@ default 10).
 
 A subfolder `_social-linking/` (name configurable via `storage_subfolder`) inside each page
 folder: one JSON file per embed plus locally downloaded media (avatar, attachments, card image).
-Media URLs deliberately reference the **physical path relative to `GRAV_ROOT`**
+Media are served from the **physical path relative to `GRAV_ROOT`**
 (e.g. `/user/pages/01.home/_social-linking/.../file.jpg`), not the "clean" page route — see
 "Notable past bugs" #2 for why.
+
+That physical path is **not** persisted in the JSON, though. `MediaCache::download()` stores only
+a relative reference (`<key>/media/<file>`, relative to the embed's own storage subfolder), and
+`MediaCache::resolve()` rebuilds the actual `EmbedStorage::publicPathFor()` web path fresh on
+*every* render, from the page's current `path()` — never from whatever the page's path happened to
+be at fetch time. See "Notable past bugs" #6 for why this indirection exists.
 
 ## Configurable options (Admin panel)
 
@@ -252,6 +258,14 @@ is entirely a Codeberg Translate / `languages/*.yaml` matter.
    `classes/templates/`, even `classes/social-linking.php` and `classes/social-linking.yaml`).
    Functionally harmless (never loaded by Grav), but unnecessary bulk in the public release. Both
    regressions (4+5) were fixed in hotfix release **v0.5.1**.
+6. **Media paths broke when subpages were reordered.** `MediaCache::download()` used to bake the
+   *physical* path of the page folder — sortable numeric prefix included (e.g. `03.` in
+   `02.blog/03.my-post`) — directly into the JSON at fetch time (see point #2 above for why the
+   physical path is used at all). Reordering subpages in the Admin renames that prefix; the media
+   file itself moves along with the renamed folder, but the path string frozen in the JSON does
+   not, so it silently pointed at a folder that no longer existed. Fix: `download()` now persists
+   only a relative reference and `MediaCache::resolve()` rebuilds the real path against the page's
+   *current* location on every render — see "Storage" above.
 
 ## Live status
 
@@ -278,7 +292,11 @@ Zwei Einbindungswege (`[social-embed]`-Shortcode über die Shortcode-Core-Abhän
 
 Medien-URLs referenzieren bewusst den physischen Pfad relativ zu `GRAV_ROOT`, nicht die „saubere"
 Seiten-Route (siehe Altbug Nr. 2 oben — sonst 404 über Grav-Routing bei tief verschachtelten
-Unterordnern). `acct` ohne Domain-Suffix bei Konten der eigenen Instanz wird in
+Unterordnern). Dieser physische Pfad wird dabei NICHT im JSON eingefroren, sondern bei jedem
+Rendern frisch aus dem aktuellen Seitenordner-Pfad gebaut (`MediaCache::resolve()` /
+`EmbedStorage::publicPathFor()`) — sonst brechen die Bildpfade, sobald der Admin Unterseiten
+umsortiert und Grav dadurch den numerischen Sortier-Präfix des Ordners umbenennt (Altbug Nr. 6).
+`acct` ohne Domain-Suffix bei Konten der eigenen Instanz wird in
 `MastodonProvider::normalizeAccount()` korrigiert (Altbug Nr. 3).
 
 Provider-Architektur (`ProviderInterface`) ist vorbereitet für weitere Dienste über Mastodon
