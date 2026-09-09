@@ -10,6 +10,14 @@ reporting feature comparable to GitHub's, so please report privately by email in
 
 **security@jcs-net.de**
 
+A PGP key for this address is published via
+[Web Key Directory](https://wiki.gnupg.org/WKD) (WKD) and should be auto-discovered by
+most modern mail/GPG clients. Fingerprint:
+
+```
+C166 608E BFA2 BD80 7D93  5471 4A36 D2FF E207 B4ED
+```
+
 Please include, as far as you can:
 
 - A description of the vulnerability and its potential impact
@@ -68,7 +76,10 @@ here — please report those to the respective project or your hosting provider 
 ## Auf Deutsch (Kurzfassung)
 
 **Sicherheitslücken bitte nicht** als öffentliches Issue auf GitHub oder Codeberg melden, sondern
-per E-Mail an **security@jcs-net.de**. Bitte möglichst mit Beschreibung, Auswirkung,
+per E-Mail an **security@jcs-net.de**. Ein PGP-Key für diese Adresse ist über
+[Web Key Directory](https://wiki.gnupg.org/WKD) (WKD) auffindbar, Fingerprint
+`C166 608E BFA2 BD80 7D93 5471 4A36 D2FF E207 B4ED`.
+Bitte möglichst mit Beschreibung, Auswirkung,
 Reproduktionsschritten (Plugin-/Grav-/PHP-Version, verwendeter `type`, betroffener Dienst) und
 ggf. einem Proof-of-Concept.
 
